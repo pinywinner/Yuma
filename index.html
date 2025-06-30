@@ -1,210 +1,304 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>שבעת ימי הפרישה: הכנת הכהן הגדול ליום הכיפורים</title>
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+
+// Helper component for animated text reveals
+const AnimatedText = ({ children, className, stagger = 0.02 }) => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, amount: 0.5 });
+
+    const containerVariants = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: stagger,
+            },
+        },
+    };
+
+    const charVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { type: 'spring', damping: 12, stiffness: 200 },
+        },
+    };
+
+    return (
+        <motion.div
+            ref={ref}
+            className={className}
+            variants={containerVariants}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            aria-hidden
+        >
+            {children.split('').map((char, index) => (
+                <motion.span key={index} variants={charVariants} style={{ display: 'inline-block' }}>
+                    {char === ' ' ? '\u00A0' : char}
+                </motion.span>
+            ))}
+        </motion.div>
+    );
+};
+
+// Section component for consistent styling and animation
+const Section = ({ children, className = '' }) => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, amount: 0.2 });
+
+    return (
+        <motion.section
+            ref={ref}
+            className={`min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 relative overflow-hidden ${className}`}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
+            transition={{ duration: 0.8 }}
+        >
+            {children}
+        </motion.section>
+    );
+};
+
+// Hero Section: The dramatic opening
+const HeroSection = () => {
+    const { scrollYProgress } = useScroll();
+    const scale = useTransform(scrollYProgress, [0, 0.1], [1, 1.5]);
+    const opacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+
+    return (
+        <motion.div style={{ scale, opacity }} className="h-screen w-full flex flex-col items-center justify-center text-center text-white fixed top-0 left-0 -z-10">
+            <div className="absolute inset-0 bg-black opacity-60"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+            <h1 className="text-6xl md:text-9xl font-serif font-extrabold tracking-tighter text-shadow-gold z-10">יוֹמָא</h1>
+            <h2 className="text-2xl md:text-4xl mt-4 font-light text-gray-200 z-10">שבעה ימים בלשכת פרהדרין</h2>
+             <p className="mt-8 text-lg text-gold z-10 animate-pulse">גְלֹל מַטָה כְּדֵי לְהִכָּנֵס</p>
+        </motion.div>
+    );
+};
+
+
+// Main App Component
+export default function App() {
+    // Background effect
+    useEffect(() => {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            body {
+                background-color: #0c0c0c;
+                color: #e0e0e0;
+                font-family: 'Assistant', sans-serif;
+            }
+            .text-shadow-gold {
+                text-shadow: 0 0 8px rgba(255, 215, 0, 0.6), 0 0 12px rgba(181, 137, 0, 0.5);
+            }
+            .card-glow {
+                box-shadow: 0 0 15px rgba(181, 137, 0, 0.3), 0 0 25px rgba(181, 137, 0, 0.2);
+            }
+            .card-glow-red {
+                 box-shadow: 0 0 15px rgba(220, 50, 47, 0.4), 0 0 25px rgba(220, 50, 47, 0.3);
+            }
+             .card-glow-blue {
+                 box-shadow: 0 0 15px rgba(38, 139, 210, 0.4), 0 0 25px rgba(38, 139, 210, 0.3);
+            }
+        `;
+        document.head.appendChild(style);
+        return () => {
+            document.head.removeChild(style);
+        };
+    }, []);
+
+    const targetRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+        offset: ['start end', 'end start']
+    });
+
+    const timelineY = useTransform(scrollYProgress, [0.3, 0.7], ['-100%', '0%']);
     
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Chart.js via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Google Fonts: Assistant -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Custom styles to enhance the design */
-        body {
-            font-family: 'Assistant', sans-serif;
-            background-color: #FDF6E3; /* Parchment background */
-            color: #002B36; /* Deep Blue/Black text */
-        }
-        /* Custom color palette from the strategy */
-        .bg-parchment { background-color: #FDF6E3; }
-        .text-deep-blue { color: #002B36; }
-        .text-olive { color: #859900; }
-        .text-gold { color: #B58900; }
-        .border-gold { border-color: #B58900; }
-        .text-red-conflict { color: #DC322F; }
-        .bg-red-conflict-light { background-color: #fce8e8; }
-        .text-blue-source { color: #268BD2; }
-        .bg-blue-source-light { background-color: #eaf4fc; }
+    return (
+        <div ref={targetRef} className="bg-[#0c0c0c]">
+            <HeroSection />
+            <div style={{ height: '100vh' }}></div> {/* Spacer for Hero */}
 
-        /* Styling for the vertical line in the timeline */
-        .timeline-line {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background-color: #B58900; /* Gold */
-            z-index: 0;
-        }
-        .timeline-item {
-            position: relative;
-            z-index: 1;
-        }
-        .timeline-dot {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #FDF6E3;
-            border: 3px solid #B58900;
-        }
-    </style>
-</head>
-<body class="bg-parchment text-deep-blue">
-
-    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
-
-        <!-- Header Section -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-bold text-olive mb-2">שבעת ימי הפרישה</h1>
-            <h2 class="text-xl md:text-2xl font-semibold text-deep-blue mb-4">הכנת הכהן הגדול ליום הכיפורים</h2>
-            <p class="text-lg max-w-3xl mx-auto">
-                אינפוגרפיקה ויזואלית על פי סוגיות ממסכת יומא. האינפוגרפיקה מפרקת את ההלכות, הטעמים והמחלוקות מאחורי תהליך ההכנה הייחודי של הכהן הגדול, שנועד להבטיח את כשרותו הרוחנית והפיזית לקראת היום הקדוש בשנה.
-            </p>
-        </header>
-
-        <!-- Section 1: The Core Principle -->
-        <section class="mb-16 text-center">
-            <h3 class="text-3xl font-bold text-olive mb-6">עקרון היסוד: ההפרשה</h3>
-            <div class="flex flex-col md:flex-row items-center justify-center gap-8">
-                <div class="text-center">
-                    <div class="text-8xl md:text-9xl font-bold text-gold">7</div>
-                    <div class="text-2xl font-semibold">ימי הפרשה</div>
-                </div>
-                <div class="text-2xl md:text-3xl max-w-md text-right leading-relaxed">
-                    "שבעת ימים קודם יום הכפורים, מפרישין כהן גדול מביתו ל<span class="font-bold text-olive">לשכת פרהדרין</span>."
-                    <p class="text-lg mt-2 font-light">
-                        הכהן הגדול עובר להתגורר בלשכה מיוחדת במתחם בית המקדש, כדי להתנתק מענייני העולם ולהתקדש לקראת עבודת היום.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 2: Contingencies -->
-        <section class="mb-16">
-            <h3 class="text-3xl font-bold text-olive mb-8 text-center">היערכות למקרי חירום: המחלוקת על "תוכנית הגיבוי"</h3>
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Card 1: Substitute Priest -->
-                <div class="bg-white/50 p-6 rounded-xl border-2 border-gold shadow-lg">
-                    <h4 class="text-2xl font-bold text-deep-blue mb-3">כהן גדול תחתיו</h4>
-                    <p class="text-lg mb-4">
-                        "מתקינין לו כהן אחר תחתיו, שמא יארע בו פסול."
-                    </p>
-                    <div class="flex items-center gap-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <p class="text-base">החשש המרכזי היה מטומאה, שהייתה פוסלת את הכהן הגדול מלעבוד. לכן, הוחזק "בהיכון" כהן נוסף, שהיה כשיר למלא את מקומו באופן מיידי. </p>
-                    </div>
-                </div>
-                <!-- Card 2: Substitute Wife -->
-                <div class="bg-red-conflict-light p-6 rounded-xl border-2 border-red-conflict shadow-lg">
-                    <h4 class="text-2xl font-bold text-red-conflict mb-3">אשה אחרת: המחלוקת</h4>
-                    <p class="text-lg mb-4">
-                        הכפרה תלויה בקיום הפסוק: "וכפר בעדו ובעד <strong>ביתו</strong>", ודרשו חז"ל: "ביתו – זו אשתו". מה קורה אם אשתו מתה?
-                    </p>
-                    <div class="space-y-4">
-                        <div class="font-semibold">
-                            <span class="text-red-conflict">דעת רבי יהודה:</span>
-                            "אף אשה אחרת מתקינין לו, שמא תמות אשתו."
-                        </div>
-                        <div class="font-semibold">
-                            <span class="text-deep-blue">דעת חכמים:</span>
-                            "אם כן, אין לדבר סוף!" (שהרי גם השנייה עלולה למות).
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 3: Legal Foundation -->
-        <section class="mb-16">
-            <h3 class="text-3xl font-bold text-olive mb-8 text-center">המקור ההלכתי: מניין לומדים על ההפרשה?</h3>
-            <div class="relative p-8">
-                <!-- The vertical line -->
-                <div class="timeline-line"></div>
-
-                <!-- Item 1: The Source -->
-                <div class="timeline-item mb-12 flex flex-row-reverse items-center w-full">
-                    <div class="w-1/2 ml-auto">
-                        <div class="bg-blue-source-light p-4 rounded-lg border-2 border-blue-source shadow-md">
-                            <h4 class="font-bold text-xl text-blue-source">המקור: שבעת ימי המילואים</h4>
-                            <p>ההלכה נלמדת מהציווי על הכנת אהרן ובניו לעבודתם במשכן. זהו המקור המרכזי לדעת רבי יוחנן.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <!-- Item 2: The Method -->
-                <div class="timeline-item mb-12 flex items-center w-full">
-                    <div class="w-1/2 mr-auto">
-                        <div class="bg-white/60 p-4 rounded-lg border-2 border-gold shadow-md">
-                            <h4 class="font-bold text-xl text-gold">השיטה: גזירה שוה</h4>
-                            <p>חז"ל משתמשים בכלי הלימוד "גזירה שוה" (היקש מילולי) מהמילה <span class="font-bold">"צִוָּה"</span>, המופיעה גם בפרשת המילואים וגם בפרשת פרה אדומה, כדי לקשר בין ההלכות.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <!-- Item 3: The Applications -->
-                <div class="timeline-item flex flex-row-reverse items-center w-full">
-                    <div class="w-1/2 ml-auto">
-                        <div class="bg-blue-source-light p-4 rounded-lg border-2 border-blue-source shadow-md">
-                            <h4 class="font-bold text-xl text-blue-source">היישומים: פרה אדומה ויום כיפור</h4>
-                            <p>מהמקור של ימי המילואים, ההלכה מיושמת בשני הקשרים מרכזיים הדורשים טהרה מוחלטת: טקס שריפת הפרה האדומה, ועבודת הכהן הגדול ביום הכיפורים.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 4: The Controversy with the Sadducees -->
-        <section class="mb-16 text-center">
-            <h3 class="text-3xl font-bold text-olive mb-6">העימות הרעיוני: הפרושים נגד הצדוקים</h3>
-             <div class="bg-red-conflict-light p-6 rounded-xl border-2 border-red-conflict shadow-lg max-w-3xl mx-auto">
-                <h4 class="text-2xl font-bold text-red-conflict mb-3">שבועת הכהן הגדול</h4>
-                <p class="text-lg mb-4">
-                    בימי בית שני, חששו חכמים שהכהן הגדול, שעלול היה להיות צדוקי, ישנה מסדר העבודה המקובל.
+            <Section>
+                <AnimatedText className="text-3xl md:text-5xl font-serif max-w-4xl text-center leading-relaxed">
+                    "שִׁבְעַת יָמִים קֹדֶם יוֹם הַכִּפּוּרִים, מַפְרִישִׁין כֹּהֵן גָּדוֹל מִבֵּיתוֹ לְלִשְׁכַּת פַּרְהֶדְרִין."
+                </AnimatedText>
+                <p className="mt-8 text-xl text-gray-400 max-w-2xl text-center">
+                    זו לא רק הפרדה פיזית. זהו מסע אל לב הקדושה, כור היתוך רוחני, פוליטי ופסיכולוגי. שבעה ימים של בידוד, לחץ וטהרה מוחלטת.
                 </p>
-                <div class="flex items-center justify-center gap-4">
-                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-conflict" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.876c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L2.33 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    <p class="text-base text-left">
-                        <strong>הטעות הצדוקית:</strong> הם סברו שיש להקטיר את הקטורת <span class="font-bold">מבחוץ</span> (בהיכל) ורק אז להיכנס עם העשן לקודש הקדשים.<br>
-                        <strong>ההלכה הפרושית:</strong> יש להכניס את הגחלים והקטורת בנפרד, ולהקטיר רק <span class="font-bold">בפנים</span>, בקודש הקדשים.<br>
-                        <strong>הפתרון:</strong> "משביעין אותו... שלא תשנה דבר מכל מה שאמרנו לך."
-                    </p>
+            </Section>
+
+            <Section className="justify-start pt-32">
+                <h3 className="text-4xl md:text-6xl font-serif text-gold text-shadow-gold mb-16">ציר הזמן: הספירה לאחור</h3>
+                <div className="w-full max-w-4xl relative">
+                    {/* The vertical line */}
+                    <motion.div 
+                        className="absolute top-0 bottom-0 left-1/2 -ml-[2px] w-1 bg-gold/30"
+                    />
+                    <motion.div 
+                        style={{ height: timelineY }}
+                        className="absolute top-0 bottom-0 left-1/2 -ml-[2px] w-1 bg-gold"
+                    />
+
+                    {/* Timeline Items */}
+                    {[
+                        { day: 7, title: "ההפרשה", desc: "הכהן הגדול מועבר מביתו הפרטי אל לשכת פרהדרין. ניתוק מוחלט מהעולם החיצון." },
+                        { day: 6, title: "לימוד הלכות", desc: "זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב." },
+                        { day: 5, title: "הזאות וטהרה", desc: "מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע." },
+                        { day: 4, title: "תרגול מעשי", desc: "הוא מתרגל את העבודות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו." },
+                        { day: 3, title: "לחץ פסיכולוגי", desc: "האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר." },
+                        { day: 2, title: "העימות עם הצדוקים", desc: "החשש מפני שינוי סדר הקטורת מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני." },
+                        { day: 1, title: "השבועה והבכי", desc: "ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו." },
+                    ].map((item, index) => (
+                        <TimelineItem key={index} item={item} index={index} total={7} />
+                    ))}
                 </div>
-                 <p class="text-lg mt-4">
-                    השבועה נועדה להבטיח את קיום המסורת הפרושית, והיא מדגישה את המתח התיאולוגי העמוק של התקופה.
-                 </p>
+            </Section>
+            
+            <Section>
+                <h3 className="text-4xl md:text-6xl font-serif text-gold text-shadow-gold mb-16 text-center">תוכניות מגירה: היערכות לאסון</h3>
+                <div className="grid md:grid-cols-2 gap-8 max-w-6xl">
+                    <ContingencyCard
+                        title="כהן תחתיו"
+                        quote="מַתְקִינִין לוֹ כֹּהֵן אַחֵר תַּחְתָּיו, שֶׁמָּא יֶאֱרַע בּוֹ פְּסוּל."
+                        description="החשש הקיומי: טומאה פתאומית שתפסול את הכהן. 'תוכנית הגיבוי' היא כהן נוסף, מוכן 'במצב הכן' בצל, מוכן להיכנס לנעליים הגדולות ביותר בעולם ברגע של משבר. צל שמאיים ומבטיח בו זמנית."
+                        glowClass="card-glow"
+                    />
+                    <ContingencyCard
+                        title="אשה אחרת: המחלוקת"
+                        quote='רַבִּי יְהוּדָה אוֹמֵר: אַף אִשָּׁה אַחֶרֶת מַתְקִינִין לוֹ... אָמְרוּ לוֹ: אִם כֵּן, אֵין לַדָּבָר סוֹף!'
+                        description='הכפרה תלויה ב"וְכִפֶּר בַּעֲדוֹ וּבְעַד בֵּיתוֹ" - וביתו זו אשתו. רבי יהודה דורש גיבוי גם לאשתו. חכמים משיבים בטיעון לוגי צונן: זהו מדרון חלקלק. המחלוקת חושפת את הגבול בין היערכות ראויה לפסימיות אבסורדית.'
+                        glowClass="card-glow-red"
+                    />
+                </div>
+            </Section>
+            
+            <Section className="bg-black/50">
+                <h3 className="text-4xl md:text-6xl font-serif text-red-500 text-shadow-lg mb-16 text-center">העימות: פרושים נגד צדוקים</h3>
+                 <div className="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-red-500/50 card-glow-red">
+                    <h4 className="text-3xl font-bold text-center mb-4">נקודת הרתיחה: הקטורת</h4>
+                    <p className="text-center text-lg text-gray-300 mb-8">הוויכוח לא היה טכני, הוא היה תהום תיאולוגית. היכן מתחיל הרגע הקדוש ביותר?</p>
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+                        <div className="w-full md:w-1/2 text-center p-6 border-2 border-gold/50 rounded-lg bg-black/30">
+                            <h5 className="text-2xl font-bold text-gold mb-2">דעת הפרושים (ההלכה)</h5>
+                            <p className="text-lg">"יַכְנִיס אֶת הַמַּחְתָּה וְאֶת הַכַּף, וְרַק אָז יַעֲלֶה עָשָׁן בִּפְנִים."</p>
+                            <p className="mt-2 text-gray-400">הקדושה נוצרת בתוך קודש הקדשים. הפעולה האנושית מתבצעת במקום הקדוש ביותר.</p>
+                        </div>
+                        <div className="w-full md:w-1/2 text-center p-6 border-2 border-red-500/50 rounded-lg bg-black/30">
+                            <h5 className="text-2xl font-bold text-red-500 mb-2">דעת הצדוקים</h5>
+                            <p className="text-lg">"יַקְטִיר מִבַּחוּץ וְיִכָּנֵס עִם הֶעָשָׁן."</p>
+                             <p className="mt-2 text-gray-400">האדם אינו יכול 'ליצור' קדושה בפנים. הוא מביא אותה מבחוץ. גישה שמרנית יותר, המרוחקת מהאל.</p>
+                        </div>
+                    </div>
+                     <div className="mt-8 text-center">
+                         <h5 className="text-2xl font-bold text-yellow-200">הפתרון הדרמטי: השבועה</h5>
+                         <p className="text-lg mt-2 max-w-2xl mx-auto">"מַשְׁבִּיעִין אָנוּ עָלֶיךָ בְּמִי שֶׁשִּׁכֵּן שְׁמוֹ בַּבַּיִת הַזֶּה, שֶׁלֹּא תְּשַׁנֶּה דָּבָר מִכָּל מַה שֶּׁאָמַרְנוּ לָךְ."</p>
+                         <p className="text-gray-400 mt-2">רגע של שיא דרמטי. הכהן, מבודד ובוכה, נשבע לקיים את מסורת חז"ל. זהו ניצחון פוליטי ורוחני שלם.</p>
+                     </div>
+                </div>
+            </Section>
+
+            <Section>
+                 <h3 className="text-4xl md:text-6xl font-serif text-blue-400 text-shadow-lg mb-16 text-center">יסודות ההלכה: מניין לנו?</h3>
+                 <div className="w-full max-w-4xl p-8 bg-gray-900/50 rounded-2xl border border-blue-400/50 card-glow-blue">
+                     <h4 className="text-3xl font-bold text-center mb-6">"כַּאֲשֶׁר צִוָּה ה'": כוחה של גזירה שווה</h4>
+                     <p className="text-center text-lg text-gray-300 mb-8">ההיגיון התלמודי אינו לינארי. הוא רשת של הקשרים. ההפרשה של שבעה ימים נלמדת מהשוואה למקור קדום יותר, באמצעות מילה משותפת.</p>
+                     <div className="flex flex-col items-center space-y-4">
+                        <SourceNode title="המקור: שבעת ימי המילואים" description="אהרן ובניו פורשים שבעה ימים לפני חנוכת המשכן. שם נאמר 'כאשר צִוָּה'." isOrigin={true} />
+                        <motion.div initial={{height: 0}} whileInView={{height: '4rem'}} transition={{duration: 1, delay: 0.5}} className="w-1 bg-blue-400/50" />
+                        <SourceNode title="היישום: פרה אדומה ויום כיפור" description="גם בעבודות אלו, הדורשות טהרה מוחלטת, נאמר 'צִוָּה'. הגזירה השווה מחברת בין העולמות ומעבירה את דין ההפרשה." />
+                     </div>
+                 </div>
+            </Section>
+
+            <footer className="text-center p-16 bg-black">
+                <h3 className="text-3xl font-serif text-gold mb-4">היציאה מהלשכה</h3>
+                <p className="text-lg text-gray-400 max-w-3xl mx-auto">
+                    הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר. הוא מוכן.
+                </p>
+                 <p className="text-sm text-gray-600 mt-8">חוויה ויזואלית מאת Gemini. מבוסס על מסכת יומא.</p>
+            </footer>
+        </div>
+    );
+}
+
+// Sub-components for clarity
+
+const TimelineItem = ({ item, index, total }) => {
+    const ref = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start 0.8', 'end 0.2']
+    });
+    
+    const direction = index % 2 === 0 ? -1 : 1;
+
+    return (
+        <motion.div
+            ref={ref}
+            className="mb-8 flex justify-center items-center relative"
+            style={{ flexDirection: index % 2 === 0 ? 'row-reverse' : 'row' }}
+        >
+            <motion.div 
+                className="w-5/12"
+                initial={{ opacity: 0, x: 50 * direction }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+            >
+                <div className={`p-4 bg-gray-900/70 rounded-lg border border-gold/30 text-center ${index % 2 === 0 ? 'md:text-left' : 'md:text-right'}`}>
+                    <p className="font-bold text-lg text-gold">{item.title}</p>
+                    <p className="text-gray-300">{item.desc}</p>
+                </div>
+            </motion.div>
+            <div className="w-2/12 flex justify-center">
+                <motion.div 
+                    className="w-10 h-10 rounded-full bg-black border-2 border-gold flex items-center justify-center font-bold text-gold z-10"
+                    style={{ scale: scrollYProgress }}
+                >
+                    {item.day}
+                </motion.div>
             </div>
-        </section>
+            <div className="w-5/12"></div>
+        </motion.div>
+    );
+}
 
+const ContingencyCard = ({ title, quote, description, glowClass }) => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-        <!-- Footer -->
-        <footer class="text-center mt-12 pt-8 border-t-2 border-gold">
-            <p class="text-lg font-semibold text-deep-blue">
-                תובנת מפתח: ההפרשה אינה רק בידוד פיזי, אלא תהליך רוחני ומשפטי מורכב שנועד להבטיח את שיא הקדושה והטהרה ביום הקדוש ביותר.
-            </p>
-            <p class="text-sm text-gray-600 mt-2">מבוסס על חברותא, מסכת יומא.</p>
-        </footer>
+    return (
+        <motion.div
+            ref={ref}
+            className={`p-8 rounded-2xl border border-white/10 bg-black/30 ${glowClass}`}
+            initial={{ opacity: 0, scale: 0.9, y: 50 }}
+            animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, type: 'spring' }}
+        >
+            <h4 className="text-3xl font-bold font-serif text-gold mb-4">{title}</h4>
+            <p className="text-lg italic text-gray-300 border-l-4 border-gold/50 pl-4 mb-4">{quote}</p>
+            <p className="text-md text-gray-400 leading-relaxed">{description}</p>
+        </motion.div>
+    );
+};
 
-    </div>
+const SourceNode = ({ title, description, isOrigin = false }) => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, amount: 0.5 });
+    return (
+        <motion.div
+            ref={ref}
+            className="w-full text-center p-6 bg-blue-900/20 border-2 border-blue-400/60 rounded-xl"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.7, delay: isOrigin ? 0.2 : 1.2 }}
+        >
+            <h5 className={`text-2xl font-bold ${isOrigin ? 'text-blue-300' : 'text-blue-400'}`}>{title}</h5>
+            <p className="text-gray-300 mt-2">{description}</p>
+        </motion.div>
+    );
+}
 
-</body>
-</html>
+                            
