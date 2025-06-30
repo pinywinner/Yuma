@@ -5,331 +5,256 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Holy of Holies: A Descent into the Chamber</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Assistant -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;700;900&display=swap" rel="stylesheet">
 
-    <!-- React & Babel for live JSX compilation -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Framer Motion for animations -->
-    <script src="https://cdn.jsdelivr.net/npm/framer-motion@10.16.4/dist/framer-motion.umd.min.js"></script>
-
     <style>
+        /* Base styling */
         body {
             background-color: #0c0c0c;
             color: #e0e0e0;
             font-family: 'Assistant', sans-serif;
+            overflow-x: hidden;
         }
         .font-serif {
             font-family: 'Noto Serif Hebrew', serif;
         }
+        /* Glow and shadow effects */
         .text-shadow-gold {
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.6), 0 0 12px rgba(181, 137, 0, 0.5);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 0 0 12px rgba(251, 191, 36, 0.6);
         }
         .card-glow {
-            box-shadow: 0 0 15px rgba(181, 137, 0, 0.3), 0 0 25px rgba(181, 137, 0, 0.2);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3), 0 0 25px rgba(251, 191, 36, 0.2);
         }
         .card-glow-red {
-             box-shadow: 0 0 15px rgba(220, 50, 47, 0.4), 0 0 25px rgba(220, 50, 47, 0.3);
+             box-shadow: 0 0 15px rgba(220, 50, 47, 0.5), 0 0 25px rgba(220, 50, 47, 0.4);
         }
-         .card-glow-blue {
-             box-shadow: 0 0 15px rgba(38, 139, 210, 0.4), 0 0 25px rgba(38, 139, 210, 0.3);
+        .card-glow-blue {
+             box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Animation states */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item-content {
+            opacity: 0;
+            transform: translateX(var(--direction, 50px));
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .timeline-item.is-visible .timeline-item-content {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .timeline-dot {
+            transform: scale(0);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .timeline-item.is-visible .timeline-dot {
+            transform: scale(1);
         }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="bg-[#0c0c0c]">
 
-    <script type="text/babel">
-        // Ensure libraries are available
-        const { useState, useEffect, useRef } = React;
-        const { motion, useScroll, useTransform, useInView } = FramerMotion;
+    <!-- Hero Section -->
+    <header id="hero" class="h-screen w-full flex flex-col items-center justify-center text-center text-white sticky top-0 -z-10">
+        <div class="absolute inset-0 bg-black opacity-70"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+        <h1 class="text-6xl md:text-9xl font-serif font-extrabold tracking-tighter text-shadow-gold z-10">יוֹמָא</h1>
+        <h2 class="text-2xl md:text-4xl mt-4 font-light text-gray-200 z-10">שבעה ימים בלשכת פרהדרין</h2>
+        <p class="mt-8 text-lg text-amber-400 z-10 animate-pulse">גְלֹל מַטָה כְּדֵי לְהִכָּנֵס</p>
+    </header>
 
-        // Helper component for animated text reveals
-        const AnimatedText = ({ children, className, stagger = 0.02 }) => {
-            const ref = useRef(null);
-            const isInView = useInView(ref, { once: true, amount: 0.5 });
+    <main id="content" class="relative z-20 bg-[#0c0c0c]">
+        <div style="height: 100vh;"></div> <!-- Spacer for the hero section -->
 
-            const containerVariants = {
-                hidden: {},
-                visible: {
-                    transition: {
-                        staggerChildren: stagger,
-                    },
-                },
-            };
+        <section class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
+            <h2 class="text-3xl md:text-5xl font-serif max-w-4xl text-center leading-relaxed">
+                "שִׁבְעַת יָמִים קֹדֶם יוֹם הַכִּפּוּרִים, מַפְרִישִׁין כֹּהֵן גָּדוֹל מִבֵּיתוֹ לְלִשְׁכַּת פַּרְהֶדְרִין."
+            </h2>
+            <p class="mt-8 text-xl text-gray-400 max-w-2xl text-center">
+                זו לא רק הפרדה פיזית. זהו מסע אל לב הקדושה, כור היתוך רוחני, פוליטי ופסיכולוגי. שבעה ימים של בידוד, לחץ וטהרה מוחלטת.
+            </p>
+        </section>
 
-            const charVariants = {
-                hidden: { opacity: 0, y: 20 },
-                visible: {
-                    opacity: 1,
-                    y: 0,
-                    transition: { type: 'spring', damping: 12, stiffness: 200 },
-                },
-            };
+        <section id="timeline-section" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
+            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16">ציר הזמן: הספירה לאחור</h3>
+            <div class="w-full max-w-4xl relative">
+                <!-- The vertical line -->
+                <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
+                <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
 
-            return (
-                <motion.div
-                    ref={ref}
-                    className={className}
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate={isInView ? "visible" : "hidden"}
-                    aria-hidden
-                >
-                    {children.split('').map((char, index) => (
-                        <motion.span key={index} variants={charVariants} style={{ display: 'inline-block' }}>
-                            {char === ' ' ? '\u00A0' : char}
-                        </motion.span>
-                    ))}
-                </motion.div>
-            );
-        };
-
-        // Section component for consistent styling and animation
-        const Section = ({ children, className = '' }) => {
-            const ref = useRef(null);
-            const isInView = useInView(ref, { once: true, amount: 0.2 });
-
-            return (
-                <motion.section
-                    ref={ref}
-                    className={`min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 relative overflow-hidden ${className}`}
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
-                    transition={{ duration: 0.8 }}
-                >
-                    {children}
-                </motion.section>
-            );
-        };
-
-        // Hero Section: The dramatic opening
-        const HeroSection = () => {
-            const { scrollYProgress } = useScroll();
-            const scale = useTransform(scrollYProgress, [0, 0.1], [1, 1.5]);
-            const opacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-
-            return (
-                <motion.div style={{ scale, opacity, position: 'fixed', top: 0, left: 0, zIndex: 10 }} className="h-screen w-full flex flex-col items-center justify-center text-center text-white">
-                    <div className="absolute inset-0 bg-black opacity-60"></div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
-                    <h1 className="text-6xl md:text-9xl font-serif font-extrabold tracking-tighter text-shadow-gold z-10">יוֹמָא</h1>
-                    <h2 className="text-2xl md:text-4xl mt-4 font-light text-gray-200 z-10">שבעה ימים בלשכת פרהדרין</h2>
-                     <p className="mt-8 text-lg text-yellow-400 z-10 animate-pulse">גְלֹל מַטָה כְּדֵי לְהִכָּנֵס</p>
-                </motion.div>
-            );
-        };
-
-
-        // Main App Component
-        function App() {
-            const targetRef = useRef(null);
-            const { scrollYProgress } = useScroll({
-                target: targetRef,
-                offset: ['start end', 'end start']
-            });
-
-            // Adjusted the range for a more noticeable effect
-            const timelineY = useTransform(scrollYProgress, [0.2, 0.5], ['-100%', '0%']);
-            
-            return (
-                <div ref={targetRef} className="bg-[#0c0c0c]">
-                    <HeroSection />
-                    <div style={{ height: '100vh' }}></div> {/* Spacer for Hero */}
-
-                    <Section>
-                        <AnimatedText className="text-3xl md:text-5xl font-serif max-w-4xl text-center leading-relaxed">
-                            "שִׁבְעַת יָמִים קֹדֶם יוֹם הַכִּפּוּרִים, מַפְרִישִׁין כֹּהֵן גָּדוֹל מִבֵּיתוֹ לְלִשְׁכַּת פַּרְהֶדְרִין."
-                        </AnimatedText>
-                        <p className="mt-8 text-xl text-gray-400 max-w-2xl text-center">
-                            זו לא רק הפרדה פיזית. זהו מסע אל לב הקדושה, כור היתוך רוחני, פוליטי ופסיכולוגי. שבעה ימים של בידוד, לחץ וטהרה מוחלטת.
-                        </p>
-                    </Section>
-
-                    <Section className="justify-start pt-32">
-                        <h3 className="text-4xl md:text-6xl font-serif text-yellow-400 text-shadow-gold mb-16">ציר הזמן: הספירה לאחור</h3>
-                        <div className="w-full max-w-4xl relative">
-                            {/* The vertical line */}
-                            <motion.div 
-                                className="absolute top-0 bottom-0 left-1/2 -ml-[2px] w-1 bg-yellow-400/30"
-                            />
-                            <motion.div 
-                                style={{ height: timelineY }}
-                                className="absolute top-0 bottom-0 left-1/2 -ml-[2px] w-1 bg-yellow-400"
-                            />
-
-                            {/* Timeline Items */}
-                            {[
-                                { day: 7, title: "ההפרשה", desc: "הכהן הגדול מועבר מביתו הפרטי אל לשכת פרהדרין. ניתוק מוחלט מהעולם החיצון." },
-                                { day: 6, title: "לימוד הלכות", desc: "זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב." },
-                                { day: 5, title: "הזאות וטהרה", desc: "מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע." },
-                                { day: 4, title: "תרגול מעשי", desc: "הוא מתרגל את העבודות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו." },
-                                { day: 3, title: "לחץ פסיכולוגי", desc: "האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר." },
-                                { day: 2, title: "העימות עם הצדוקים", desc: "החשש מפני שינוי סדר הקטורת מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני." },
-                                { day: 1, title: "השבועה והבכי", desc: "ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו." },
-                            ].map((item, index) => (
-                                <TimelineItem key={index} item={item} index={index} />
-                            ))}
-                        </div>
-                    </Section>
-                    
-                    <Section>
-                        <h3 className="text-4xl md:text-6xl font-serif text-yellow-400 text-shadow-gold mb-16 text-center">תוכניות מגירה: היערכות לאסון</h3>
-                        <div className="grid md:grid-cols-2 gap-8 max-w-6xl">
-                            <ContingencyCard
-                                title="כהן תחתיו"
-                                quote="מַתְקִינִין לוֹ כֹּהֵן אַחֵר תַּחְתָּיו, שֶׁמָּא יֶאֱרַע בּוֹ פְּסוּל."
-                                description="החשש הקיומי: טומאה פתאומית שתפסול את הכהן. 'תוכנית הגיבוי' היא כהן נוסף, מוכן 'במצב הכן' בצל, מוכן להיכנס לנעליים הגדולות ביותר בעולם ברגע של משבר. צל שמאיים ומבטיח בו זמנית."
-                                glowClass="card-glow"
-                            />
-                            <ContingencyCard
-                                title="אשה אחרת: המחלוקת"
-                                quote='רַבִּי יְהוּדָה אוֹמֵר: אַף אִשָּׁה אַחֶרֶת מַתְקִינִין לוֹ... אָמְרוּ לוֹ: אִם כֵּן, אֵין לַדָּבָר סוֹף!'
-                                description='הכפרה תלויה ב"וְכִפֶּר בַּעֲדוֹ וּבְעַד בֵּיתוֹ" - וביתו זו אשתו. רבי יהודה דורש גיבוי גם לאשתו. חכמים משיבים בטיעון לוגי צונן: זהו מדרון חלקלק. המחלוקת חושפת את הגבול בין היערכות ראויה לפסימיות אבסורדית.'
-                                glowClass="card-glow-red"
-                            />
-                        </div>
-                    </Section>
-                    
-                    <Section className="bg-black/50">
-                        <h3 className="text-4xl md:text-6xl font-serif text-red-500 text-shadow-lg mb-16 text-center">העימות: פרושים נגד צדוקים</h3>
-                         <div className="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-red-500/50 card-glow-red">
-                            <h4 className="text-3xl font-bold text-center mb-4">נקודת הרתיחה: הקטורת</h4>
-                            <p className="text-center text-lg text-gray-300 mb-8">הוויכוח לא היה טכני, הוא היה תהום תיאולוגית. היכן מתחיל הרגע הקדוש ביותר?</p>
-                            <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                                <div className="w-full md:w-1/2 text-center p-6 border-2 border-yellow-400/50 rounded-lg bg-black/30">
-                                    <h5 className="text-2xl font-bold text-yellow-400 mb-2">דעת הפרושים (ההלכה)</h5>
-                                    <p className="text-lg">"יַכְנִיס אֶת הַמַּחְתָּה וְאֶת הַכַּף, וְרַק אָז יַעֲלֶה עָשָׁן בִּפְנִים."</p>
-                                    <p className="mt-2 text-gray-400">הקדושה נוצרת בתוך קודש הקדשים. הפעולה האנושית מתבצעת במקום הקדוש ביותר.</p>
-                                </div>
-                                <div className="w-full md:w-1/2 text-center p-6 border-2 border-red-500/50 rounded-lg bg-black/30">
-                                    <h5 className="text-2xl font-bold text-red-500 mb-2">דעת הצדוקים</h5>
-                                    <p className="text-lg">"יַקְטִיר מִבַּחוּץ וְיִכָּנֵס עִם הֶעָשָׁן."</p>
-                                     <p className="mt-2 text-gray-400">האדם אינו יכול 'ליצור' קדושה בפנים. הוא מביא אותה מבחוץ. גישה שמרנית יותר, המרוחקת מהאל.</p>
-                                </div>
-                            </div>
-                             <div className="mt-8 text-center">
-                                 <h5 className="text-2xl font-bold text-yellow-200">הפתרון הדרמטי: השבועה</h5>
-                                 <p className="text-lg mt-2 max-w-2xl mx-auto">"מַשְׁבִּיעִין אָנוּ עָלֶיךָ בְּמִי שֶׁשִּׁכֵּן שְׁמוֹ בַּבַּיִת הַזֶּה, שֶׁלֹּא תְּשַׁנֶּה דָּבָר מִכָּל מַה שֶּׁאָמַרְנוּ לָךְ."</p>
-                                 <p className="text-gray-400 mt-2">רגע של שיא דרמטי. הכהן, מבודד ובוכה, נשבע לקיים את מסורת חז"ל. זהו ניצחון פוליטי ורוחני שלם.</p>
-                             </div>
-                        </div>
-                    </Section>
-
-                    <Section>
-                         <h3 className="text-4xl md:text-6xl font-serif text-blue-400 text-shadow-lg mb-16 text-center">יסודות ההלכה: מניין לנו?</h3>
-                         <div className="w-full max-w-4xl p-8 bg-gray-900/50 rounded-2xl border border-blue-400/50 card-glow-blue">
-                             <h4 className="text-3xl font-bold text-center mb-6">"כַּאֲשֶׁר צִוָּה ה'": כוחה של גזירה שווה</h4>
-                             <p className="text-center text-lg text-gray-300 mb-8">ההיגיון התלמודי אינו לינארי. הוא רשת של הקשרים. ההפרשה של שבעה ימים נלמדת מהשוואה למקור קדום יותר, באמצעות מילה משותפת.</p>
-                             <div className="flex flex-col items-center space-y-4">
-                                <SourceNode title="המקור: שבעת ימי המילואים" description="אהרן ובניו פורשים שבעה ימים לפני חנוכת המשכן. שם נאמר 'כאשר צִוָּה'." isOrigin={true} />
-                                <motion.div initial={{height: 0}} whileInView={{height: '4rem'}} transition={{duration: 1, delay: 0.5}} className="w-1 bg-blue-400/50" />
-                                <SourceNode title="היישום: פרה אדומה ויום כיפור" description="גם בעבודות אלו, הדורשות טהרה מוחלטת, נאמר 'צִוָּה'. הגזירה השווה מחברת בין העולמות ומעבירה את דין ההפרשה." />
-                             </div>
-                         </div>
-                    </Section>
-
-                    <footer className="text-center p-16 bg-black">
-                        <h3 className="text-3xl font-serif text-yellow-400 mb-4">היציאה מהלשכה</h3>
-                        <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-                            הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר. הוא מוכן.
-                        </p>
-                         <p className="text-sm text-gray-600 mt-8">חוויה ויזואלית מאת Gemini. מבוסס על מסכת יומא.</p>
-                    </footer>
+                <!-- Timeline Items -->
+                <div class="timeline-item" style="--direction: -50px;">
+                    <p class="font-bold text-lg text-amber-400">ההפרשה (יום 7)</p>
+                    <p class="text-gray-300">הכהן הגדול מועבר מביתו הפרטי אל לשכת פרהדרין. ניתוק מוחלט מהעולם החיצון.</p>
                 </div>
-            );
-        }
+                <div class="timeline-item text-left" style="--direction: 50px;">
+                    <p class="font-bold text-lg text-amber-400">לימוד הלכות (יום 6)</p>
+                    <p class="text-gray-300">זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב.</p>
+                </div>
+                <div class="timeline-item" style="--direction: -50px;">
+                    <p class="font-bold text-lg text-amber-400">הזאות וטהרה (יום 5)</p>
+                    <p class="text-gray-300">מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע.</p>
+                </div>
+                <div class="timeline-item text-left" style="--direction: 50px;">
+                    <p class="font-bold text-lg text-amber-400">תרגול מעשי (יום 4)</p>
+                    <p class="text-gray-300">הוא מתרגל את העבודות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו.</p>
+                </div>
+                 <div class="timeline-item" style="--direction: -50px;">
+                    <p class="font-bold text-lg text-amber-400">לחץ פסיכולוגי (יום 3)</p>
+                    <p class="text-gray-300">האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר.</p>
+                </div>
+                <div class="timeline-item text-left" style="--direction: 50px;">
+                    <p class="font-bold text-lg text-amber-400">העימות עם הצדוקים (יום 2)</p>
+                    <p class="text-gray-300">החשש מפני שינוי סדר הקטורת מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני.</p>
+                </div>
+                 <div class="timeline-item" style="--direction: -50px;">
+                    <p class="font-bold text-lg text-amber-400">השבועה והבכי (יום 1)</p>
+                    <p class="text-gray-300">ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו.</p>
+                </div>
+            </div>
+        </section>
 
-        // Sub-components for clarity
-        const TimelineItem = ({ item, index }) => {
-            const ref = useRef(null);
-            const { scrollYProgress } = useScroll({
-                target: ref,
-                offset: ['start 0.8', 'end 0.2']
-            });
-            
-            const direction = index % 2 === 0 ? -1 : 1;
-            const textAlignment = index % 2 === 0 ? 'md:text-left' : 'md:text-right';
+        <section class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
+            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16 text-center">תוכניות מגירה: היערכות לאסון</h3>
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl">
+                <div class="p-8 rounded-2xl border border-white/10 bg-black/30 card-glow h-full flex flex-col">
+                    <h4 class="text-3xl font-bold font-serif text-amber-400 mb-4">כהן תחתיו</h4>
+                    <p class="text-lg italic text-gray-300 border-r-4 border-amber-400/50 pr-4 mb-4">"מַתְקִינִין לוֹ כֹּהֵן אַחֵר תַּחְתָּיו, שֶׁמָּא יֶאֱרַע בּוֹ פְּסוּל."</p>
+                    <p class="text-md text-gray-400 leading-relaxed flex-grow">החשש הקיומי: טומאה פתאומית שתפסול את הכהן. 'תוכנית הגיבוי' היא כהן נוסף, מוכן 'במצב הכן' בצל, מוכן להיכנס לנעליים הגדולות ביותר בעולם ברגע של משבר. צל שמאיים ומבטיח בו זמנית.</p>
+                </div>
+                <div class="p-8 rounded-2xl border border-white/10 bg-black/30 card-glow-red h-full flex flex-col">
+                    <h4 class="text-3xl font-bold font-serif text-red-500 mb-4">אשה אחרת: המחלוקת</h4>
+                    <p class="text-lg italic text-gray-300 border-r-4 border-red-500/50 pr-4 mb-4">'רַבִּי יְהוּדָה אוֹמֵר: אַף אִשָּׁה אַחֶרֶת מַתְקִינִין לוֹ... אָמְרוּ לוֹ: אִם כֵּן, אֵין לַדָּבָר סוֹף!'</p>
+                    <p class="text-md text-gray-400 leading-relaxed flex-grow">הכפרה תלויה ב"וְכִפֶּר בַּעֲדוֹ וּבְעַד בֵּיתוֹ" - וביתו זו אשתו. רבי יהודה דורש גיבוי גם לאשתו. חכמים משיבים בטיעון לוגי צונן: זהו מדרון חלקלק. המחלוקת חושפת את הגבול בין היערכות ראויה לפסימיות אבסורדית.</p>
+                </div>
+            </div>
+        </section>
 
-            return (
-                <motion.div
-                    ref={ref}
-                    className="mb-8 flex justify-center items-center relative"
-                    style={{ flexDirection: index % 2 === 0 ? 'row-reverse' : 'row' }}
-                >
-                    <motion.div 
-                        className="w-5/12"
-                        initial={{ opacity: 0, x: 50 * direction }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <div className={`p-4 bg-gray-900/70 rounded-lg border border-yellow-400/30 text-center ${textAlignment}`}>
-                            <p className="font-bold text-lg text-yellow-400">{item.title}</p>
-                            <p className="text-gray-300">{item.desc}</p>
-                        </div>
-                    </motion.div>
-                    <div className="w-2/12 flex justify-center">
-                        <motion.div 
-                            className="w-10 h-10 rounded-full bg-black border-2 border-yellow-400 flex items-center justify-center font-bold text-yellow-400 z-10"
-                            style={{ scale: scrollYProgress }}
-                        >
-                            {item.day}
-                        </motion.div>
+        <section class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 bg-black/50 fade-in-section">
+            <h3 class="text-4xl md:text-6xl font-serif text-red-500 text-shadow-lg mb-12 text-center">העימות: פרושים נגד צדוקים</h3>
+            <div class="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-red-500/50 card-glow-red">
+                <h4 class="text-3xl font-bold text-center mb-4">נקודת הרתיחה: הקטורת</h4>
+                <p class="text-center text-lg text-gray-300 mb-8">הוויכוח לא היה טכני, הוא היה תהום תיאולוגית. היכן מתחיל הרגע הקדוש ביותר?</p>
+                <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div class="w-full md:w-1/2 text-center p-6 border-2 border-amber-400/50 rounded-lg bg-black/30">
+                        <h5 class="text-2xl font-bold text-amber-400 mb-2">דעת הפרושים (ההלכה)</h5>
+                        <p class="text-lg">"יַכְנִיס אֶת הַמַּחְתָּה וְאֶת הַכַּף, וְרַק אָז יַעֲלֶה עָשָׁן בִּפְנִים."</p>
+                        <p class="mt-2 text-gray-400">הקדושה נוצרת בתוך קודש הקדשים. הפעולה האנושית מתבצעת במקום הקדוש ביותר.</p>
                     </div>
-                    <div className="w-5/12"></div>
-                </motion.div>
-            );
-        }
+                    <div class="w-full md:w-1/2 text-center p-6 border-2 border-red-500/50 rounded-lg bg-black/30">
+                        <h5 class="text-2xl font-bold text-red-500 mb-2">דעת הצדוקים</h5>
+                        <p class="text-lg">"יַקְטִיר מִבַּחוּץ וְיִכָּנֵס עִם הֶעָשָׁן."</p>
+                        <p class="mt-2 text-gray-400">האדם אינו יכול 'ליצור' קדושה בפנים. הוא מביא אותה מבחוץ. גישה שמרנית יותר, המרוחקת מהאל.</p>
+                    </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <h5 class="text-2xl font-bold text-yellow-200">הפתרון הדרמטי: השבועה</h5>
+                    <p class="text-lg mt-2 max-w-2xl mx-auto">"מַשְׁבִּיעִין אָנוּ עָלֶיךָ בְּמִי שֶׁשִּׁכֵּן שְׁמוֹ בַּבַּיִת הַזֶּה, שֶׁלֹּא תְּשַׁנֶּה דָּבָר מִכָּל מַה שֶּׁאָמַרְנוּ לָךְ."</p>
+                    <p class="text-gray-400 mt-2">רגע של שיא דרמטי. הכהן, מבודד ובוכה, נשבע לקיים את מסורת חז"ל. זהו ניצחון פוליטי ורוחני שלם.</p>
+                </div>
+            </div>
+        </section>
 
-        const ContingencyCard = ({ title, quote, description, glowClass }) => {
-            const ref = useRef(null);
-            const isInView = useInView(ref, { once: true, amount: 0.3 });
+        <footer class="text-center p-16 bg-black">
+            <h3 class="text-3xl font-serif text-amber-400 mb-4">היציאה מהלשכה</h3>
+            <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+                הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר. הוא מוכן.
+            </p>
+            <p class="text-sm text-gray-600 mt-8">חוויה ויזואלית מאת Gemini. מבוסס על מסכת יומא.</p>
+        </footer>
+    </main>
 
-            return (
-                <motion.div
-                    ref={ref}
-                    className={`p-8 rounded-2xl border border-white/10 bg-black/30 ${glowClass} h-full flex flex-col`}
-                    initial={{ opacity: 0, scale: 0.9, y: 50 }}
-                    animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-                    transition={{ duration: 0.7, type: 'spring' }}
-                >
-                    <h4 className="text-3xl font-bold font-serif text-yellow-400 mb-4">{title}</h4>
-                    <p className="text-lg italic text-gray-300 border-r-4 border-yellow-400/50 pr-4 mb-4">{quote}</p>
-                    <p className="text-md text-gray-400 leading-relaxed flex-grow">{description}</p>
-                </motion.div>
-            );
-        };
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Intersection Observer for fade-in animations ---
+        const sections = document.querySelectorAll('.fade-in-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1 });
 
-        const SourceNode = ({ title, description, isOrigin = false }) => {
-            const ref = useRef(null);
-            const isInView = useInView(ref, { once: true, amount: 0.5 });
-            return (
-                <motion.div
-                    ref={ref}
-                    className="w-full text-center p-6 bg-blue-900/20 border-2 border-blue-400/60 rounded-xl"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 0.7, delay: isOrigin ? 0.2 : 1.2 }}
-                >
-                    <h5 className={`text-2xl font-bold ${isOrigin ? 'text-blue-300' : 'text-blue-400'}`}>{title}</h5>
-                    <p className="text-gray-300 mt-2">{description}</p>
-                </motion.div>
-            );
-        }
+        sections.forEach(section => observer.observe(section));
 
-        const container = document.getElementById('root');
-        const root = ReactDOM.createRoot(container);
-        root.render(<App />);
+        // --- Hero Section parallax scroll effect ---
+        const hero = document.getElementById('hero');
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            hero.style.opacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.7));
+        });
 
+        // --- Timeline scroll-linked animation ---
+        const timelineSection = document.getElementById('timeline-section');
+        const timelineProgress = document.getElementById('timeline-progress');
+        
+        // Re-structure timeline HTML for easier processing
+        const timelineContainer = timelineSection.querySelector('.w-full.max-w-4xl');
+        const itemsData = Array.from(timelineContainer.querySelectorAll('.timeline-item')).map(el => el.innerHTML);
+        timelineContainer.innerHTML = `
+            <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
+            <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
+        `;
+
+        itemsData.forEach((content, index) => {
+            const isReversed = index % 2 !== 0;
+            const itemWrapper = document.createElement('div');
+            itemWrapper.className = `timeline-item mb-12 flex items-center w-full ${isReversed ? 'flex-row-reverse' : ''}`;
+            
+            itemWrapper.innerHTML = `
+                <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: ${isReversed ? '50px' : '-50px'}">
+                    ${content}
+                </div>
+                <div class="w-2/12 flex justify-center">
+                    <div class="timeline-dot w-6 h-6 rounded-full bg-black border-2 border-amber-400 z-10"></div>
+                </div>
+                <div class="w-5/12"></div>
+            `;
+            timelineContainer.appendChild(itemWrapper);
+        });
+
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const timelineObserver = new IntersectionObserver((entries) => {
+             entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        timelineItems.forEach(item => timelineObserver.observe(item));
+
+
+        const timelineProgressEl = document.getElementById('timeline-progress');
+        window.addEventListener('scroll', () => {
+            const rect = timelineSection.getBoundingClientRect();
+            const start = rect.top + window.scrollY;
+            const end = start + rect.height;
+            
+            const progress = (window.scrollY - start) / (rect.height - window.innerHeight);
+            const clampedProgress = Math.max(0, Math.min(1, progress));
+            
+            if (timelineProgressEl) {
+               timelineProgressEl.style.height = `${clampedProgress * 100}%`;
+            }
+        });
+    });
     </script>
 </body>
 </html>
