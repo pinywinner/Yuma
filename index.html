@@ -65,6 +65,22 @@
         .timeline-item.is-visible .timeline-dot {
             transform: scale(1);
         }
+
+        /* Finale Canvas Styling */
+        #finale-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0c0c0c;
+            z-index: 40;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+        #finale-canvas.is-active {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-[#0c0c0c]">
@@ -81,6 +97,7 @@
     <main id="content" class="relative z-20 bg-[#0c0c0c]">
         <div style="height: 100vh;"></div> <!-- Spacer for the hero section -->
 
+        <!-- All previous sections remain here... -->
         <section class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
             <h2 class="text-3xl md:text-5xl font-serif max-w-4xl text-center leading-relaxed">
                 "שִׁבְעַת יָמִים קֹדֶם יוֹם הַכִּפּוּרִים, מַפְרִישִׁין כֹּהֵן גָּדוֹל מִבֵּיתוֹ לְלִשְׁכַּת פַּרְהֶדְרִין."
@@ -93,39 +110,8 @@
         <section id="timeline-section" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
             <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16">ציר הזמן: הספירה לאחור</h3>
             <div class="w-full max-w-4xl relative">
-                <!-- The vertical line -->
                 <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
                 <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
-
-                <!-- Timeline Items -->
-                <div class="timeline-item" style="--direction: -50px;">
-                    <p class="font-bold text-lg text-amber-400">ההפרשה (יום 7)</p>
-                    <p class="text-gray-300">הכהן הגדול מועבר מביתו הפרטי אל לשכת פרהדרין. ניתוק מוחלט מהעולם החיצון.</p>
-                </div>
-                <div class="timeline-item text-left" style="--direction: 50px;">
-                    <p class="font-bold text-lg text-amber-400">לימוד הלכות (יום 6)</p>
-                    <p class="text-gray-300">זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב.</p>
-                </div>
-                <div class="timeline-item" style="--direction: -50px;">
-                    <p class="font-bold text-lg text-amber-400">הזאות וטהרה (יום 5)</p>
-                    <p class="text-gray-300">מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע.</p>
-                </div>
-                <div class="timeline-item text-left" style="--direction: 50px;">
-                    <p class="font-bold text-lg text-amber-400">תרגול מעשי (יום 4)</p>
-                    <p class="text-gray-300">הוא מתרגל את העבודות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו.</p>
-                </div>
-                 <div class="timeline-item" style="--direction: -50px;">
-                    <p class="font-bold text-lg text-amber-400">לחץ פסיכולוגי (יום 3)</p>
-                    <p class="text-gray-300">האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר.</p>
-                </div>
-                <div class="timeline-item text-left" style="--direction: 50px;">
-                    <p class="font-bold text-lg text-amber-400">העימות עם הצדוקים (יום 2)</p>
-                    <p class="text-gray-300">החשש מפני שינוי סדר הקטורת מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני.</p>
-                </div>
-                 <div class="timeline-item" style="--direction: -50px;">
-                    <p class="font-bold text-lg text-amber-400">השבועה והבכי (יום 1)</p>
-                    <p class="text-gray-300">ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו.</p>
-                </div>
             </div>
         </section>
 
@@ -148,35 +134,41 @@
         <section class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 bg-black/50 fade-in-section">
             <h3 class="text-4xl md:text-6xl font-serif text-red-500 text-shadow-lg mb-12 text-center">העימות: פרושים נגד צדוקים</h3>
             <div class="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-red-500/50 card-glow-red">
-                <h4 class="text-3xl font-bold text-center mb-4">נקודת הרתיחה: הקטורת</h4>
-                <p class="text-center text-lg text-gray-300 mb-8">הוויכוח לא היה טכני, הוא היה תהום תיאולוגית. היכן מתחיל הרגע הקדוש ביותר?</p>
-                <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div class="w-full md:w-1/2 text-center p-6 border-2 border-amber-400/50 rounded-lg bg-black/30">
-                        <h5 class="text-2xl font-bold text-amber-400 mb-2">דעת הפרושים (ההלכה)</h5>
-                        <p class="text-lg">"יַכְנִיס אֶת הַמַּחְתָּה וְאֶת הַכַּף, וְרַק אָז יַעֲלֶה עָשָׁן בִּפְנִים."</p>
-                        <p class="mt-2 text-gray-400">הקדושה נוצרת בתוך קודש הקדשים. הפעולה האנושית מתבצעת במקום הקדוש ביותר.</p>
-                    </div>
-                    <div class="w-full md:w-1/2 text-center p-6 border-2 border-red-500/50 rounded-lg bg-black/30">
-                        <h5 class="text-2xl font-bold text-red-500 mb-2">דעת הצדוקים</h5>
-                        <p class="text-lg">"יַקְטִיר מִבַּחוּץ וְיִכָּנֵס עִם הֶעָשָׁן."</p>
-                        <p class="mt-2 text-gray-400">האדם אינו יכול 'ליצור' קדושה בפנים. הוא מביא אותה מבחוץ. גישה שמרנית יותר, המרוחקת מהאל.</p>
-                    </div>
-                </div>
-                <div class="mt-8 text-center">
-                    <h5 class="text-2xl font-bold text-yellow-200">הפתרון הדרמטי: השבועה</h5>
-                    <p class="text-lg mt-2 max-w-2xl mx-auto">"מַשְׁבִּיעִין אָנוּ עָלֶיךָ בְּמִי שֶׁשִּׁכֵּן שְׁמוֹ בַּבַּיִת הַזֶּה, שֶׁלֹּא תְּשַׁנֶּה דָּבָר מִכָּל מַה שֶּׁאָמַרְנוּ לָךְ."</p>
-                    <p class="text-gray-400 mt-2">רגע של שיא דרמטי. הכהן, מבודד ובוכה, נשבע לקיים את מסורת חז"ל. זהו ניצחון פוליטי ורוחני שלם.</p>
-                </div>
+                 <h4 class="text-3xl font-bold text-center mb-4">נקודת הרתיחה: הקטורת</h4>
+                 <p class="text-center text-lg text-gray-300 mb-8">הוויכוח לא היה טכני, הוא היה תהום תיאולוגית. היכן מתחיל הרגע הקדוש ביותר?</p>
+                 <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                     <div class="w-full md:w-1/2 text-center p-6 border-2 border-amber-400/50 rounded-lg bg-black/30">
+                         <h5 class="text-2xl font-bold text-amber-400 mb-2">דעת הפרושים (ההלכה)</h5>
+                         <p class="text-lg">"יַכְנִיס אֶת הַמַּחְתָּה וְאֶת הַכַּף, וְרַק אָז יַעֲלֶה עָשָׁן בִּפְנִים."</p>
+                     </div>
+                     <div class="w-full md:w-1/2 text-center p-6 border-2 border-red-500/50 rounded-lg bg-black/30">
+                         <h5 class="text-2xl font-bold text-red-500 mb-2">דעת הצדוקים</h5>
+                         <p class="text-lg">"יַקְטִיר מִבַּחוּץ וְיִכָּנֵס עִם הֶעָשָׁן."</p>
+                     </div>
+                 </div>
+                 <div class="mt-8 text-center">
+                     <h5 class="text-2xl font-bold text-yellow-200">הפתרון הדרמטי: השבועה</h5>
+                     <p class="text-lg mt-2 max-w-2xl mx-auto">"מַשְׁבִּיעִין אָנוּ עָלֶיךָ בְּמִי שֶׁשִּׁכֵּן שְׁמוֹ בַּבַּיִת הַזֶּה, שֶׁלֹּא תְּשַׁנֶּה דָּבָר מִכָּל מַה שֶּׁאָמַרְנוּ לָךְ."</p>
+                 </div>
             </div>
         </section>
 
-        <footer class="text-center p-16 bg-black">
+
+        <footer id="pre-finale-footer" class="text-center p-16 bg-black fade-in-section relative z-30">
             <h3 class="text-3xl font-serif text-amber-400 mb-4">היציאה מהלשכה</h3>
             <p class="text-lg text-gray-400 max-w-3xl mx-auto">
-                הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר. הוא מוכן.
+                הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר.
             </p>
-            <p class="text-sm text-gray-600 mt-8">חוויה ויזואלית מאת Gemini. מבוסס על מסכת יומא.</p>
         </footer>
+        
+        <!-- THE FINALE SECTION -->
+        <section id="finale" class="relative h-screen w-full bg-[#0c0c0c]">
+            <canvas id="finale-canvas"></canvas>
+            <div id="finale-text" class="absolute inset-0 flex items-center justify-center text-center opacity-0 transition-opacity duration-1000" style="z-index: 50;">
+                <h2 class="text-4xl md:text-6xl font-serif text-amber-300 text-shadow-gold">הוּא מוּכָן.</h2>
+            </div>
+        </section>
+
     </main>
 
     <script>
@@ -202,58 +194,181 @@
 
         // --- Timeline scroll-linked animation ---
         const timelineSection = document.getElementById('timeline-section');
-        const timelineProgress = document.getElementById('timeline-progress');
-        
-        // Re-structure timeline HTML for easier processing
-        const timelineContainer = timelineSection.querySelector('.w-full.max-w-4xl');
-        const itemsData = Array.from(timelineContainer.querySelectorAll('.timeline-item')).map(el => el.innerHTML);
-        timelineContainer.innerHTML = `
-            <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
-            <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
-        `;
+        if (timelineSection) {
+            const timelineContainer = timelineSection.querySelector('.w-full.max-w-4xl');
+            const itemsData = [
+                { day: 7, title: "ההפרשה", desc: "הכהן הגדול מועבר מביתו הפרטי אל לשכת פרהדרין. ניתוק מוחלט מהעולם החיצון." },
+                { day: 6, title: "לימוד הלכות", desc: "זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב." },
+                { day: 5, title: "הזאות וטהרה", desc: "מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע." },
+                { day: 4, title: "תרגול מעשי", desc: "הוא מתרגל את העבודות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו." },
+                { day: 3, title: "לחץ פסיכולוגי", desc: "האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר." },
+                { day: 2, title: "העימות עם הצדוקים", desc: "החשש מפני שינוי סדר הקטורת מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני." },
+                { day: 1, title: "השבועה והבכי", desc: "ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו." },
+            ];
 
-        itemsData.forEach((content, index) => {
-            const isReversed = index % 2 !== 0;
-            const itemWrapper = document.createElement('div');
-            itemWrapper.className = `timeline-item mb-12 flex items-center w-full ${isReversed ? 'flex-row-reverse' : ''}`;
+            itemsData.forEach((item, index) => {
+                const isReversed = index % 2 !== 0;
+                const itemWrapper = document.createElement('div');
+                itemWrapper.className = `timeline-item mb-12 flex items-center w-full ${isReversed ? 'flex-row-reverse' : ''}`;
+                
+                itemWrapper.innerHTML = `
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: ${isReversed ? '50px' : '-50px'}">
+                        <p class="font-bold text-lg text-amber-400">${item.title} (יום ${item.day})</p>
+                        <p class="text-gray-300">${item.desc}</p>
+                    </div>
+                    <div class="w-2/12 flex justify-center">
+                        <div class="timeline-dot w-6 h-6 rounded-full bg-black border-2 border-amber-400 z-10"></div>
+                    </div>
+                    <div class="w-5/12"></div>
+                `;
+                timelineContainer.appendChild(itemWrapper);
+            });
+
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const timelineObserver = new IntersectionObserver((entries) => {
+                 entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.5 });
             
-            itemWrapper.innerHTML = `
-                <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: ${isReversed ? '50px' : '-50px'}">
-                    ${content}
-                </div>
-                <div class="w-2/12 flex justify-center">
-                    <div class="timeline-dot w-6 h-6 rounded-full bg-black border-2 border-amber-400 z-10"></div>
-                </div>
-                <div class="w-5/12"></div>
-            `;
-            timelineContainer.appendChild(itemWrapper);
-        });
+            timelineItems.forEach(item => timelineObserver.observe(item));
 
-        const timelineItems = document.querySelectorAll('.timeline-item');
-        const timelineObserver = new IntersectionObserver((entries) => {
-             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
+            const timelineProgressEl = document.getElementById('timeline-progress');
+            window.addEventListener('scroll', () => {
+                const rect = timelineSection.getBoundingClientRect();
+                const start = rect.top + window.scrollY;
+                const progress = (window.scrollY - start) / (rect.height - window.innerHeight);
+                const clampedProgress = Math.max(0, Math.min(1, progress));
+                
+                if (timelineProgressEl) {
+                   timelineProgressEl.style.height = `${clampedProgress * 100}%`;
                 }
             });
-        }, { threshold: 0.5 });
+        }
+
+        // --- Finale Canvas Animation ---
+        const finaleSection = document.getElementById('finale');
+        const canvas = document.getElementById('finale-canvas');
+        const finaleText = document.getElementById('finale-text');
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
         
-        timelineItems.forEach(item => timelineObserver.observe(item));
+        let triangles = [];
+        let animationState = 'idle';
 
+        function initFinale() {
+            resizeCanvas();
+            triangles = [];
+            const rows = 20;
+            const cols = 20;
+            const cellWidth = canvas.width / cols;
+            const cellHeight = canvas.height / rows;
 
-        const timelineProgressEl = document.getElementById('timeline-progress');
-        window.addEventListener('scroll', () => {
-            const rect = timelineSection.getBoundingClientRect();
-            const start = rect.top + window.scrollY;
-            const end = start + rect.height;
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const x = j * cellWidth;
+                    const y = i * cellHeight;
+                    // Create two triangles for each cell to form a rectangle
+                    triangles.push(new Triangle(x, y, x + cellWidth, y, x, y + cellHeight, '#0c0c0c'));
+                    triangles.push(new Triangle(x + cellWidth, y, x + cellWidth, y + cellHeight, x, y + cellHeight, '#0c0c0c'));
+                }
+            }
+        }
+
+        class Triangle {
+            constructor(x1, y1, x2, y2, x3, y3, color) {
+                this.p1 = { x: x1, y: y1 };
+                this.p2 = { x: x2, y: y2 };
+                this.p3 = { x: x3, y: y3 };
+                this.color = color;
+                this.alpha = 1;
+                this.vx = (Math.random() - 0.5) * 10;
+                this.vy = (Math.random() - 0.5) * 10;
+                this.rotation = 0;
+                this.vr = (Math.random() - 0.5) * 0.1;
+            }
+
+            draw() {
+                if (this.alpha <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                
+                const cx = (this.p1.x + this.p2.x + this.p3.x) / 3;
+                const cy = (this.p1.y + this.p2.y + this.p3.y) / 3;
+                
+                ctx.translate(cx, cy);
+                ctx.rotate(this.rotation);
+                ctx.translate(-cx, -cy);
+
+                ctx.beginPath();
+                ctx.moveTo(this.p1.x, this.p1.y);
+                ctx.lineTo(this.p2.x, this.p2.y);
+                ctx.lineTo(this.p3.x, this.p3.y);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
+            shatter() {
+                this.p1.x += this.vx; this.p1.y += this.vy;
+                this.p2.x += this.vx; this.p2.y += this.vy;
+                this.p3.x += this.vx; this.p3.y += this.vy;
+                this.rotation += this.vr;
+                this.alpha -= 0.01;
+            }
+        }
+
+        function animateFinale() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let allFaded = true;
+            triangles.forEach(t => {
+                t.shatter();
+                t.draw();
+                if (t.alpha > 0) allFaded = false;
+            });
             
-            const progress = (window.scrollY - start) / (rect.height - window.innerHeight);
-            const clampedProgress = Math.max(0, Math.min(1, progress));
-            
-            if (timelineProgressEl) {
-               timelineProgressEl.style.height = `${clampedProgress * 100}%`;
+            if (allFaded) {
+                cancelAnimationFrame(animationFrameId);
+                animationState = 'finished';
+                finaleText.style.opacity = 1;
+            } else {
+                animationFrameId = requestAnimationFrame(animateFinale);
+            }
+        }
+
+        const finaleObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && animationState === 'idle') {
+                    animationState = 'running';
+                    canvas.classList.add('is-active');
+                    setTimeout(() => {
+                        initFinale();
+                        triangles.forEach(t => t.draw());
+                        setTimeout(() => {
+                            animationFrameId = requestAnimationFrame(animateFinale);
+                        }, 500); // Wait a moment before shattering
+                    }, 500); // Wait for canvas to fade in
+                }
+            });
+        }, { threshold: 0.8 });
+
+        if(finaleSection) {
+            finaleObserver.observe(finaleSection);
+        }
+        window.addEventListener('resize', () => {
+            if(animationState !== 'running') {
+                resizeCanvas();
             }
         });
+
     });
     </script>
 </body>
