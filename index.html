@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שבעת ימי הפרישה: הכנת הכהן הגדול ליום הכיפורים</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts: Assistant -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom styles to enhance the design */
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #FDF6E3; /* Parchment background */
+            color: #002B36; /* Deep Blue/Black text */
+        }
+        /* Custom color palette from the strategy */
+        .bg-parchment { background-color: #FDF6E3; }
+        .text-deep-blue { color: #002B36; }
+        .text-olive { color: #859900; }
+        .text-gold { color: #B58900; }
+        .border-gold { border-color: #B58900; }
+        .text-red-conflict { color: #DC322F; }
+        .bg-red-conflict-light { background-color: #fce8e8; }
+        .text-blue-source { color: #268BD2; }
+        .bg-blue-source-light { background-color: #eaf4fc; }
+
+        /* Styling for the vertical line in the timeline */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: #B58900; /* Gold */
+            z-index: 0;
+        }
+        .timeline-item {
+            position: relative;
+            z-index: 1;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #FDF6E3;
+            border: 3px solid #B58900;
+        }
+    </style>
+</head>
+<body class="bg-parchment text-deep-blue">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold text-olive mb-2">שבעת ימי הפרישה</h1>
+            <h2 class="text-xl md:text-2xl font-semibold text-deep-blue mb-4">הכנת הכהן הגדול ליום הכיפורים</h2>
+            <p class="text-lg max-w-3xl mx-auto">
+                אינפוגרפיקה ויזואלית על פי סוגיות ממסכת יומא. האינפוגרפיקה מפרקת את ההלכות, הטעמים והמחלוקות מאחורי תהליך ההכנה הייחודי של הכהן הגדול, שנועד להבטיח את כשרותו הרוחנית והפיזית לקראת היום הקדוש בשנה.
+            </p>
+        </header>
+
+        <!-- Section 1: The Core Principle -->
+        <section class="mb-16 text-center">
+            <h3 class="text-3xl font-bold text-olive mb-6">עקרון היסוד: ההפרשה</h3>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                <div class="text-center">
+                    <div class="text-8xl md:text-9xl font-bold text-gold">7</div>
+                    <div class="text-2xl font-semibold">ימי הפרשה</div>
+                </div>
+                <div class="text-2xl md:text-3xl max-w-md text-right leading-relaxed">
+                    "שבעת ימים קודם יום הכפורים, מפרישין כהן גדול מביתו ל<span class="font-bold text-olive">לשכת פרהדרין</span>."
+                    <p class="text-lg mt-2 font-light">
+                        הכהן הגדול עובר להתגורר בלשכה מיוחדת במתחם בית המקדש, כדי להתנתק מענייני העולם ולהתקדש לקראת עבודת היום.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Contingencies -->
+        <section class="mb-16">
+            <h3 class="text-3xl font-bold text-olive mb-8 text-center">היערכות למקרי חירום: המחלוקת על "תוכנית הגיבוי"</h3>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Card 1: Substitute Priest -->
+                <div class="bg-white/50 p-6 rounded-xl border-2 border-gold shadow-lg">
+                    <h4 class="text-2xl font-bold text-deep-blue mb-3">כהן גדול תחתיו</h4>
+                    <p class="text-lg mb-4">
+                        "מתקינין לו כהן אחר תחתיו, שמא יארע בו פסול."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <p class="text-base">החשש המרכזי היה מטומאה, שהייתה פוסלת את הכהן הגדול מלעבוד. לכן, הוחזק "בהיכון" כהן נוסף, שהיה כשיר למלא את מקומו באופן מיידי. </p>
+                    </div>
+                </div>
+                <!-- Card 2: Substitute Wife -->
+                <div class="bg-red-conflict-light p-6 rounded-xl border-2 border-red-conflict shadow-lg">
+                    <h4 class="text-2xl font-bold text-red-conflict mb-3">אשה אחרת: המחלוקת</h4>
+                    <p class="text-lg mb-4">
+                        הכפרה תלויה בקיום הפסוק: "וכפר בעדו ובעד <strong>ביתו</strong>", ודרשו חז"ל: "ביתו – זו אשתו". מה קורה אם אשתו מתה?
+                    </p>
+                    <div class="space-y-4">
+                        <div class="font-semibold">
+                            <span class="text-red-conflict">דעת רבי יהודה:</span>
+                            "אף אשה אחרת מתקינין לו, שמא תמות אשתו."
+                        </div>
+                        <div class="font-semibold">
+                            <span class="text-deep-blue">דעת חכמים:</span>
+                            "אם כן, אין לדבר סוף!" (שהרי גם השנייה עלולה למות).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Legal Foundation -->
+        <section class="mb-16">
+            <h3 class="text-3xl font-bold text-olive mb-8 text-center">המקור ההלכתי: מניין לומדים על ההפרשה?</h3>
+            <div class="relative p-8">
+                <!-- The vertical line -->
+                <div class="timeline-line"></div>
+
+                <!-- Item 1: The Source -->
+                <div class="timeline-item mb-12 flex flex-row-reverse items-center w-full">
+                    <div class="w-1/2 ml-auto">
+                        <div class="bg-blue-source-light p-4 rounded-lg border-2 border-blue-source shadow-md">
+                            <h4 class="font-bold text-xl text-blue-source">המקור: שבעת ימי המילואים</h4>
+                            <p>ההלכה נלמדת מהציווי על הכנת אהרן ובניו לעבודתם במשכן. זהו המקור המרכזי לדעת רבי יוחנן.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <!-- Item 2: The Method -->
+                <div class="timeline-item mb-12 flex items-center w-full">
+                    <div class="w-1/2 mr-auto">
+                        <div class="bg-white/60 p-4 rounded-lg border-2 border-gold shadow-md">
+                            <h4 class="font-bold text-xl text-gold">השיטה: גזירה שוה</h4>
+                            <p>חז"ל משתמשים בכלי הלימוד "גזירה שוה" (היקש מילולי) מהמילה <span class="font-bold">"צִוָּה"</span>, המופיעה גם בפרשת המילואים וגם בפרשת פרה אדומה, כדי לקשר בין ההלכות.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <!-- Item 3: The Applications -->
+                <div class="timeline-item flex flex-row-reverse items-center w-full">
+                    <div class="w-1/2 ml-auto">
+                        <div class="bg-blue-source-light p-4 rounded-lg border-2 border-blue-source shadow-md">
+                            <h4 class="font-bold text-xl text-blue-source">היישומים: פרה אדומה ויום כיפור</h4>
+                            <p>מהמקור של ימי המילואים, ההלכה מיושמת בשני הקשרים מרכזיים הדורשים טהרה מוחלטת: טקס שריפת הפרה האדומה, ועבודת הכהן הגדול ביום הכיפורים.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The Controversy with the Sadducees -->
+        <section class="mb-16 text-center">
+            <h3 class="text-3xl font-bold text-olive mb-6">העימות הרעיוני: הפרושים נגד הצדוקים</h3>
+             <div class="bg-red-conflict-light p-6 rounded-xl border-2 border-red-conflict shadow-lg max-w-3xl mx-auto">
+                <h4 class="text-2xl font-bold text-red-conflict mb-3">שבועת הכהן הגדול</h4>
+                <p class="text-lg mb-4">
+                    בימי בית שני, חששו חכמים שהכהן הגדול, שעלול היה להיות צדוקי, ישנה מסדר העבודה המקובל.
+                </p>
+                <div class="flex items-center justify-center gap-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-conflict" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.876c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L2.33 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <p class="text-base text-left">
+                        <strong>הטעות הצדוקית:</strong> הם סברו שיש להקטיר את הקטורת <span class="font-bold">מבחוץ</span> (בהיכל) ורק אז להיכנס עם העשן לקודש הקדשים.<br>
+                        <strong>ההלכה הפרושית:</strong> יש להכניס את הגחלים והקטורת בנפרד, ולהקטיר רק <span class="font-bold">בפנים</span>, בקודש הקדשים.<br>
+                        <strong>הפתרון:</strong> "משביעין אותו... שלא תשנה דבר מכל מה שאמרנו לך."
+                    </p>
+                </div>
+                 <p class="text-lg mt-4">
+                    השבועה נועדה להבטיח את קיום המסורת הפרושית, והיא מדגישה את המתח התיאולוגי העמוק של התקופה.
+                 </p>
+            </div>
+        </section>
+
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 pt-8 border-t-2 border-gold">
+            <p class="text-lg font-semibold text-deep-blue">
+                תובנת מפתח: ההפרשה אינה רק בידוד פיזי, אלא תהליך רוחני ומשפטי מורכב שנועד להבטיח את שיא הקדושה והטהרה ביום הקדוש ביותר.
+            </p>
+            <p class="text-sm text-gray-600 mt-2">מבוסס על חברותא, מסכת יומא.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
