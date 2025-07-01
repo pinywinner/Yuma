@@ -29,6 +29,11 @@
         }
         .card-glow {
             box-shadow: 0 0 15px rgba(251, 191, 36, 0.3), 0 0 25px rgba(251, 191, 36, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+        .card-glow:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.5), 0 0 40px rgba(251, 191, 36, 0.3);
         }
         .card-glow-red {
              box-shadow: 0 0 15px rgba(220, 50, 47, 0.5), 0 0 25px rgba(220, 50, 47, 0.4);
@@ -66,6 +71,45 @@
             transform: scale(1);
         }
 
+        /* Golden Thread Element */
+        #golden-thread {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 12px;
+            height: 12px;
+            background-color: #FBBF24; /* amber-400 */
+            border-radius: 50%;
+            z-index: 1000;
+            box-shadow: 0 0 15px 5px rgba(251, 191, 36, 0.6);
+            transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out, background-color 0.5s ease-in-out;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        #golden-thread.nervous {
+            animation: nervous-pulse 0.5s infinite ease-in-out;
+        }
+        #golden-thread.learning {
+            background-color: #3B82F6; /* blue-500 */
+            box-shadow: 0 0 15px 5px rgba(59, 130, 246, 0.6);
+        }
+        #golden-thread.finale-prep {
+            animation: none;
+            transform: translate(-50vw, -50vh) scale(20);
+            box-shadow: 0 0 100px 50px rgba(251, 191, 36, 0.8);
+        }
+        #golden-thread.hidden {
+            transform: scale(0);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 15px 5px rgba(251, 191, 36, 0.6); }
+            50% { transform: scale(1.1); box-shadow: 0 0 25px 10px rgba(251, 191, 36, 0.7); }
+        }
+        @keyframes nervous-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 15px 5px rgba(220, 50, 47, 0.6); background-color: #ef4444; }
+            50% { transform: scale(1.2); box-shadow: 0 0 20px 8px rgba(220, 50, 47, 0.8); background-color: #ef4444; }
+        }
+
         /* Finale Canvas Styling */
         #finale-canvas {
             position: absolute;
@@ -73,19 +117,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #0c0c0c;
+            background-color: transparent;
             z-index: 40;
-            opacity: 0;
-            transition: opacity 1s ease-in;
-        }
-        #finale-canvas.is-active {
-            opacity: 1;
         }
     </style>
 </head>
 <body class="bg-[#0c0c0c]">
 
-    <!-- Hero Section -->
+    <div id="golden-thread"></div>
+
     <header id="hero" class="h-screen w-full flex flex-col items-center justify-center text-center text-white sticky top-0 -z-10">
         <div class="absolute inset-0 bg-black opacity-70"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
@@ -95,77 +135,110 @@
     </header>
 
     <main id="content" class="relative z-20 bg-[#0c0c0c]">
-        <div style="height: 100vh;"></div> <!-- Spacer for the hero section -->
+        <div style="height: 100vh;"></div>
 
-        <!-- All previous sections remain here... -->
-        <section class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
+        <section data-thread-state="default" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
             <h2 class="text-3xl md:text-5xl font-serif max-w-4xl text-center leading-relaxed">
                 "שִׁבְעַת יָמִים קֹדֶם יוֹם הַכִּפּוּרִים, מַפְרִישִׁין כֹּהֵן גָּדוֹל מִבֵּיתוֹ לְלִשְׁכַּת פַּרְהֶדְרִין."
             </h2>
-            <p class="mt-8 text-xl text-gray-400 max-w-2xl text-center">
-                זו לא רק הפרדה פיזית. זהו מסע אל לב הקדושה, כור היתוך רוחני, פוליטי ופסיכולוגי. שבעה ימים של בידוד, לחץ וטהרה מוחלטת.
+            <p class="mt-8 text-xl text-gray-400 max-w-3xl text-center">
+                זו לא רק הפרדה פיזית. זהו מסע אל לב הקדושה. ההפרשה היא אקט של התקדשות, ניתוק מהעולם החיצון והתמקדות מוחלטת בעבודת היום הקדוש. אבל מדוע דווקא לשכה זו?
             </p>
+            <div class="mt-12 grid md:grid-cols-2 gap-8 max-w-5xl">
+                <div class="p-6 bg-gray-900/50 rounded-xl border border-amber-400/20 card-glow">
+                    <h4 class="text-2xl font-serif text-amber-400 mb-2">לשכת בלווטין</h4>
+                    <p class="text-gray-300">בתחילה, בימי הכהנים הגדולים הכשרים כשמעון הצדיק, נקראה הלשכה על שם ה'בלווטין' - השרים והיועצים החשובים. שם המעיד על מעמדו הרם של הכהן.</p>
+                </div>
+                <div class="p-6 bg-gray-900/50 rounded-xl border border-amber-400/20 card-glow">
+                    <h4 class="text-2xl font-serif text-amber-400 mb-2">לשכת פרהדרין</h4>
+                    <p class="text-gray-300">לאחר מכן, בתקופה בה הכהונה הגדולה נקנתה בממון, הכהנים היו מתחלפים מדי שנה, בדומה ל'פרהדרין' - פקידי ממשל זוטרים. השם הפך לסמל של ירידת הדורות.</p>
+                </div>
+            </div>
         </section>
 
-        <section id="timeline-section" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
-            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16">ציר הזמן: הספירה לאחור</h3>
+        <section data-thread-state="nervous" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
+            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16 text-center">היערכות לאסון: תוכניות המגירה</h3>
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl">
+                <div class="p-8 rounded-2xl border border-white/10 bg-black/30 card-glow h-full flex flex-col">
+                    <h4 class="text-3xl font-bold font-serif text-amber-400 mb-4">כהן תחתיו</h4>
+                    <p class="text-lg italic text-gray-300 border-r-4 border-amber-400/50 pr-4 mb-4">"מַתְקִינִין לוֹ כֹּהֵן אַחֵר תַּחְתָּיו, שֶׁמָּא יֶאֱרַע בּוֹ פְּסוּל."</p>
+                    <p class="text-md text-gray-400 leading-relaxed flex-grow">החשש הקיומי: טומאה פתאומית שתפסול את הכהן. 'תוכנית הגיבוי' היא כהן נוסף, מוכן 'במצב הכן' בצל, שאף בגדיו נתפרו למידתו. הוא צל שמאיים ומבטיח בו זמנית.</p>
+                </div>
+                <div class="p-8 rounded-2xl border border-white/10 bg-black/30 card-glow-red h-full flex flex-col">
+                    <h4 class="text-3xl font-bold font-serif text-red-500 mb-4">אשה אחרת: המחלוקת</h4>
+                    <p class="text-lg italic text-gray-300 border-r-4 border-red-500/50 pr-4 mb-4">'רַבִּי יְהוּדָה אוֹמֵר: אַף אִשָּׁה אַחֶרֶת מַתְקִינִין לוֹ... אָמְרוּ לוֹ: אִם כֵּן, אֵין לַדָּבָר סוֹף!'</p>
+                    <p class="text-md text-gray-400 leading-relaxed flex-grow">הכפרה תלויה בפסוק "וְכִפֶּר בַּעֲדוֹ וּבְעַד בֵּיתוֹ" - וביתו זו אשתו. רבי יהודה דורש גיבוי גם למקרה שאשתו תמות. חכמים משיבים בטיעון לוגי צונן שחושף את הגבול הדק בין היערכות ראויה לפסימיות אבסורדית.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="timeline-section" data-thread-state="default" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
+            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16">סדר היום בלשכה: שבעה ימי הכנה</h3>
             <div class="w-full max-w-4xl relative">
                 <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
                 <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
             </div>
         </section>
-
-        <section class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
-            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16 text-center">תוכניות מגירה: היערכות לאסון</h3>
-            <div class="grid md:grid-cols-2 gap-8 max-w-6xl">
-                <div class="p-8 rounded-2xl border border-white/10 bg-black/30 card-glow h-full flex flex-col">
-                    <h4 class="text-3xl font-bold font-serif text-amber-400 mb-4">כהן תחתיו</h4>
-                    <p class="text-lg italic text-gray-300 border-r-4 border-amber-400/50 pr-4 mb-4">"מַתְקִינִין לוֹ כֹּהֵן אַחֵר תַּחְתָּיו, שֶׁמָּא יֶאֱרַע בּוֹ פְּסוּל."</p>
-                    <p class="text-md text-gray-400 leading-relaxed flex-grow">החשש הקיומי: טומאה פתאומית שתפסול את הכהן. 'תוכנית הגיבוי' היא כהן נוסף, מוכן 'במצב הכן' בצל, מוכן להיכנס לנעליים הגדולות ביותר בעולם ברגע של משבר. צל שמאיים ומבטיח בו זמנית.</p>
+        
+        <section data-thread-state="learning" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 bg-black/30 fade-in-section">
+            <h3 class="text-4xl md:text-6xl font-serif text-blue-400 text-shadow-lg mb-12 text-center">יסודות ההלכה: מניין לנו?</h3>
+            <div class="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-blue-400/50 card-glow-blue">
+                <p class="text-center text-lg text-gray-300 mb-8">ההיגיון התלמודי אינו לינארי. הוא רשת של הקשרים. ההפרשה של שבעה ימים נלמדת מהשוואה למקור קדום יותר - שבעת ימי המילואים של אהרן ובניו.</p>
+                <div class="text-center font-serif text-2xl md:text-3xl text-amber-300 p-4 bg-black/20 rounded-lg">
+                    "כַּאֲשֶׁר עָשָׂה בַּיּוֹם הַזֶּה, צִוָּה ה' לַעֲשֹׂת לְכַפֵּר עֲלֵיכֶם" (ויקרא ח, לד)
                 </div>
-                <div class="p-8 rounded-2xl border border-white/10 bg-black/30 card-glow-red h-full flex flex-col">
-                    <h4 class="text-3xl font-bold font-serif text-red-500 mb-4">אשה אחרת: המחלוקת</h4>
-                    <p class="text-lg italic text-gray-300 border-r-4 border-red-500/50 pr-4 mb-4">'רַבִּי יְהוּדָה אוֹמֵר: אַף אִשָּׁה אַחֶרֶת מַתְקִינִין לוֹ... אָמְרוּ לוֹ: אִם כֵּן, אֵין לַדָּבָר סוֹף!'</p>
-                    <p class="text-md text-gray-400 leading-relaxed flex-grow">הכפרה תלויה ב"וְכִפֶּר בַּעֲדוֹ וּבְעַד בֵּיתוֹ" - וביתו זו אשתו. רבי יהודה דורש גיבוי גם לאשתו. חכמים משיבים בטיעון לוגי צונן: זהו מדרון חלקלק. המחלוקת חושפת את הגבול בין היערכות ראויה לפסימיות אבסורדית.</p>
+                <div class="grid md:grid-cols-3 gap-6 mt-8 text-center">
+                    <div class="p-4">
+                        <h4 class="text-xl font-bold text-blue-300">"לַעֲשֹׂת"</h4>
+                        <p>נלמד בגזירה שווה מהמילה "צִוָּה" בפרשת פרה אדומה. מכאן, גם הכהן השורף את הפרה טעון פרישה של שבעה ימים.</p>
+                    </div>
+                    <div class="p-4 border-r border-l border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300">המקור: ימי המילואים</h4>
+                        <p>הציווי המקורי על הפרשה ניתן לאהרן ובניו לפני חנוכת המשכן. זהו אב-הטיפוס לכל פרישה עתידית.</p>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="text-xl font-bold text-blue-300">"לְכַפֵּר"</h4>
+                        <p>זהו הרמז לעבודת יום הכיפורים. הגמרא דנה מדוע לא נלמד מכאן גם לחגים אחרים, ומסבירה שיום כיפור דומה לימי המילואים בכך שהוא אירוע ייחודי של פעם בשנה.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 bg-black/50 fade-in-section">
+        <section data-thread-state="nervous" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 bg-black/50 fade-in-section">
             <h3 class="text-4xl md:text-6xl font-serif text-red-500 text-shadow-lg mb-12 text-center">העימות: פרושים נגד צדוקים</h3>
-            <div class="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-red-500/50 card-glow-red">
-                 <h4 class="text-3xl font-bold text-center mb-4">נקודת הרתיחה: הקטורת</h4>
-                 <p class="text-center text-lg text-gray-300 mb-8">הוויכוח לא היה טכני, הוא היה תהום תיאולוגית. היכן מתחיל הרגע הקדוש ביותר?</p>
-                 <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                     <div class="w-full md:w-1/2 text-center p-6 border-2 border-amber-400/50 rounded-lg bg-black/30">
-                         <h5 class="text-2xl font-bold text-amber-400 mb-2">דעת הפרושים (ההלכה)</h5>
-                         <p class="text-lg">"יַכְנִיס אֶת הַמַּחְתָּה וְאֶת הַכַּף, וְרַק אָז יַעֲלֶה עָשָׁן בִּפְנִים."</p>
-                     </div>
-                     <div class="w-full md:w-1/2 text-center p-6 border-2 border-red-500/50 rounded-lg bg-black/30">
-                         <h5 class="text-2xl font-bold text-red-500 mb-2">דעת הצדוקים</h5>
-                         <p class="text-lg">"יַקְטִיר מִבַּחוּץ וְיִכָּנֵס עִם הֶעָשָׁן."</p>
-                     </div>
-                 </div>
+             <div class="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-red-500/50 card-glow-red">
+                <h4 class="text-3xl font-bold text-center mb-4">נקודת הרתיחה: הקטורת</h4>
+                <p class="text-center text-lg text-gray-300 mb-8">הוויכוח לא היה טכני, הוא היה תהום תיאולוגית. היכן מתחיל הרגע הקדוש ביותר?</p>
+                <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div class="w-full md:w-1/2 text-center p-6 border-2 border-amber-400/50 rounded-lg bg-black/30">
+                        <h5 class="text-2xl font-bold text-amber-400 mb-2">דעת הפרושים (ההלכה)</h5>
+                        <p class="text-lg">"יַכְנִיס אֶת הַמַּחְתָּה וְאֶת הַכַּף, וְרַק אָז יַעֲלֶה עָשָׁן בִּפְנִים."</p>
+                        <p class="mt-2 text-gray-400">הקדושה נוצרת בתוך קודש הקדשים. הפעולה האנושית מתבצעת במקום הקדוש ביותר.</p>
+                    </div>
+                    <div class="w-full md:w-1/2 text-center p-6 border-2 border-red-500/50 rounded-lg bg-black/30">
+                        <h5 class="text-2xl font-bold text-red-500 mb-2">דעת הצדוקים</h5>
+                        <p class="text-lg">"יַקְטִיר מִבַּחוּץ וְיִכָּנֵס עִם הֶעָשָׁן."</p>
+                         <p class="mt-2 text-gray-400">האדם אינו יכול 'ליצור' קדושה בפנים. הוא מביא אותה מבחוץ. גישה שמרנית יותר, המרוחקת מהאל.</p>
+                    </div>
+                </div>
                  <div class="mt-8 text-center">
                      <h5 class="text-2xl font-bold text-yellow-200">הפתרון הדרמטי: השבועה</h5>
                      <p class="text-lg mt-2 max-w-2xl mx-auto">"מַשְׁבִּיעִין אָנוּ עָלֶיךָ בְּמִי שֶׁשִּׁכֵּן שְׁמוֹ בַּבַּיִת הַזֶּה, שֶׁלֹּא תְּשַׁנֶּה דָּבָר מִכָּל מַה שֶּׁאָמַרְנוּ לָךְ."</p>
+                     <p class="text-gray-400 mt-2">רגע של שיא דרמטי. הכהן, מבודד ובוכה על החשד, נשבע לקיים את מסורת חז"ל. והזקנים בוכים עמו על שנאלצו לחשוד בו.</p>
                  </div>
             </div>
         </section>
 
-
-        <footer id="pre-finale-footer" class="text-center p-16 bg-black fade-in-section relative z-30">
-            <h3 class="text-3xl font-serif text-amber-400 mb-4">היציאה מהלשכה</h3>
-            <p class="text-lg text-gray-400 max-w-3xl mx-auto">
-                הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר.
-            </p>
-        </footer>
-        
-        <!-- THE FINALE SECTION -->
         <section id="finale" class="relative h-screen w-full bg-[#0c0c0c]">
             <canvas id="finale-canvas"></canvas>
-            <div id="finale-text" class="absolute inset-0 flex items-center justify-center text-center opacity-0 transition-opacity duration-1000" style="z-index: 50;">
-                <h2 class="text-4xl md:text-6xl font-serif text-amber-300 text-shadow-gold">הוּא מוּכָן.</h2>
+            <div id="finale-text-wrapper" class="absolute inset-0 flex items-center justify-center z-50">
+                <div id="finale-text" class="text-center opacity-0 transition-opacity duration-1000">
+                    <h3 class="text-3xl font-serif text-amber-400 mb-4">היציאה מהלשכה</h3>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
+                        הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר.
+                    </p>
+                    <h2 class="text-4xl md:text-6xl font-serif text-amber-300 text-shadow-gold">הוּא מוּכָן.</h2>
+                </div>
             </div>
         </section>
 
@@ -173,15 +246,22 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Intersection Observer for fade-in animations ---
-        const sections = document.querySelectorAll('.fade-in-section');
+        const goldenThread = document.getElementById('golden-thread');
+
+        // --- Intersection Observer for fade-in and thread state ---
+        const sections = document.querySelectorAll('section');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-visible');
+                    const state = entry.target.getAttribute('data-thread-state');
+                    if (goldenThread && state) {
+                        goldenThread.className = 'thread-visible'; // Base class
+                        goldenThread.classList.add(state);
+                    }
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.3 });
 
         sections.forEach(section => observer.observe(section));
 
@@ -189,7 +269,9 @@
         const hero = document.getElementById('hero');
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
-            hero.style.opacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.7));
+            if (hero) {
+                hero.style.opacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.7));
+            }
         });
 
         // --- Timeline scroll-linked animation ---
@@ -197,12 +279,12 @@
         if (timelineSection) {
             const timelineContainer = timelineSection.querySelector('.w-full.max-w-4xl');
             const itemsData = [
-                { day: 7, title: "ההפרשה", desc: "הכהן הגדול מועבר מביתו הפרטי אל לשכת פרהדרין. ניתוק מוחלט מהעולם החיצון." },
-                { day: 6, title: "לימוד הלכות", desc: "זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב." },
-                { day: 5, title: "הזאות וטהרה", desc: "מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע." },
-                { day: 4, title: "תרגול מעשי", desc: "הוא מתרגל את העבודות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו." },
-                { day: 3, title: "לחץ פסיכולוגי", desc: "האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר." },
-                { day: 2, title: "העימות עם הצדוקים", desc: "החשש מפני שינוי סדר הקטורת מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני." },
+                { day: 7, title: "ההפרשה והבידוד", desc: "הכהן הגדול מועבר מביתו ללשכת פרהדרין. ניתוק מוחלט מהעולם החיצון כדי להתקדש." },
+                { day: 6, title: "לימוד הלכות עבודת היום", desc: "זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב." },
+                { day: 5, title: "הזאות מי חטאת", desc: "מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע." },
+                { day: 4, title: "תרגול מעשי", desc: "הוא מתרגל את העבודות הקשות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו." },
+                { day: 3, title: "לחץ פסיכולוגי שיא", desc: "האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר." },
+                { day: 2, title: "הכנה לעימות התיאולוגי", desc: "החשש מפני שינוי סדר הקטורת על ידי הצדוקים מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני." },
                 { day: 1, title: "השבועה והבכי", desc: "ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו." },
             ];
 
@@ -213,23 +295,21 @@
                 
                 itemWrapper.innerHTML = `
                     <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: ${isReversed ? '50px' : '-50px'}">
-                        <p class="font-bold text-lg text-amber-400">${item.title} (יום ${item.day})</p>
+                        <p class="font-bold text-lg text-amber-400">יום ${item.day}: ${item.title}</p>
                         <p class="text-gray-300">${item.desc}</p>
                     </div>
                     <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-6 h-6 rounded-full bg-black border-2 border-amber-400 z-10"></div>
+                        <div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">${item.day}</div>
                     </div>
                     <div class="w-5/12"></div>
                 `;
                 timelineContainer.appendChild(itemWrapper);
             });
-
+            
             const timelineItems = document.querySelectorAll('.timeline-item');
             const timelineObserver = new IntersectionObserver((entries) => {
                  entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('is-visible');
                 });
             }, { threshold: 0.5 });
             
@@ -241,10 +321,7 @@
                 const start = rect.top + window.scrollY;
                 const progress = (window.scrollY - start) / (rect.height - window.innerHeight);
                 const clampedProgress = Math.max(0, Math.min(1, progress));
-                
-                if (timelineProgressEl) {
-                   timelineProgressEl.style.height = `${clampedProgress * 100}%`;
-                }
+                if (timelineProgressEl) timelineProgressEl.style.height = `${clampedProgress * 100}%`;
             });
         }
 
@@ -254,123 +331,23 @@
         const finaleText = document.getElementById('finale-text');
         const ctx = canvas.getContext('2d');
         let animationFrameId;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        
-        let triangles = [];
+        let particles = [];
         let animationState = 'idle';
 
-        function initFinale() {
-            resizeCanvas();
-            triangles = [];
-            const rows = 20;
-            const cols = 20;
-            const cellWidth = canvas.width / cols;
-            const cellHeight = canvas.height / rows;
-
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < cols; j++) {
-                    const x = j * cellWidth;
-                    const y = i * cellHeight;
-                    // Create two triangles for each cell to form a rectangle
-                    triangles.push(new Triangle(x, y, x + cellWidth, y, x, y + cellHeight, '#0c0c0c'));
-                    triangles.push(new Triangle(x + cellWidth, y, x + cellWidth, y + cellHeight, x, y + cellHeight, '#0c0c0c'));
-                }
+        function resizeCanvas() {
+            if(canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
             }
         }
-
-        class Triangle {
-            constructor(x1, y1, x2, y2, x3, y3, color) {
-                this.p1 = { x: x1, y: y1 };
-                this.p2 = { x: x2, y: y2 };
-                this.p3 = { x: x3, y: y3 };
-                this.color = color;
+        
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 8 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
                 this.alpha = 1;
-                this.vx = (Math.random() - 0.5) * 10;
-                this.vy = (Math.random() - 0.5) * 10;
-                this.rotation = 0;
-                this.vr = (Math.random() - 0.5) * 0.1;
-            }
-
-            draw() {
-                if (this.alpha <= 0) return;
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.fillStyle = this.color;
-                
-                const cx = (this.p1.x + this.p2.x + this.p3.x) / 3;
-                const cy = (this.p1.y + this.p2.y + this.p3.y) / 3;
-                
-                ctx.translate(cx, cy);
-                ctx.rotate(this.rotation);
-                ctx.translate(-cx, -cy);
-
-                ctx.beginPath();
-                ctx.moveTo(this.p1.x, this.p1.y);
-                ctx.lineTo(this.p2.x, this.p2.y);
-                ctx.lineTo(this.p3.x, this.p3.y);
-                ctx.closePath();
-                ctx.fill();
-                ctx.restore();
-            }
-
-            shatter() {
-                this.p1.x += this.vx; this.p1.y += this.vy;
-                this.p2.x += this.vx; this.p2.y += this.vy;
-                this.p3.x += this.vx; this.p3.y += this.vy;
-                this.rotation += this.vr;
-                this.alpha -= 0.01;
-            }
-        }
-
-        function animateFinale() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            let allFaded = true;
-            triangles.forEach(t => {
-                t.shatter();
-                t.draw();
-                if (t.alpha > 0) allFaded = false;
-            });
-            
-            if (allFaded) {
-                cancelAnimationFrame(animationFrameId);
-                animationState = 'finished';
-                finaleText.style.opacity = 1;
-            } else {
-                animationFrameId = requestAnimationFrame(animateFinale);
-            }
-        }
-
-        const finaleObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && animationState === 'idle') {
-                    animationState = 'running';
-                    canvas.classList.add('is-active');
-                    setTimeout(() => {
-                        initFinale();
-                        triangles.forEach(t => t.draw());
-                        setTimeout(() => {
-                            animationFrameId = requestAnimationFrame(animateFinale);
-                        }, 500); // Wait a moment before shattering
-                    }, 500); // Wait for canvas to fade in
-                }
-            });
-        }, { threshold: 0.8 });
-
-        if(finaleSection) {
-            finaleObserver.observe(finaleSection);
-        }
-        window.addEventListener('resize', () => {
-            if(animationState !== 'running') {
-                resizeCanvas();
-            }
-        });
-
-    });
-    </script>
-</body>
-</html>
-
+      
