@@ -53,43 +53,48 @@
             transform: translateY(0);
         }
 
-        .timeline-item-content {
+        .timeline-item .timeline-item-content, .timeline-item .timeline-dot {
             opacity: 0;
-            transform: translateX(var(--direction, 50px));
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
+        
+        .timeline-item .timeline-item-content {
+             transform: translateX(var(--direction, 50px));
+        }
+        .timeline-item .timeline-dot {
+            transform: scale(0);
+        }
+
         .timeline-item.is-visible .timeline-item-content {
             opacity: 1;
             transform: translateX(0);
         }
-        
-        .timeline-dot {
-            transform: scale(0);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
         .timeline-item.is-visible .timeline-dot {
+            opacity: 1;
             transform: scale(1);
         }
 
         /* Golden Thread Element */
         #golden-thread {
             position: fixed;
-            bottom: 2rem;
+            bottom: -100px; /* Start off-screen */
             right: 2rem;
             width: 12px;
             height: 12px;
-            background-color: #FBBF24; /* amber-400 */
+            background-color: #FBBF24;
             border-radius: 50%;
             z-index: 1000;
             box-shadow: 0 0 15px 5px rgba(251, 191, 36, 0.6);
-            transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out, background-color 0.5s ease-in-out;
-            animation: pulse 2s infinite ease-in-out;
+            transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out, background-color 0.5s ease-in-out, bottom 0.5s ease-out;
+        }
+        #golden-thread.is-active {
+            bottom: 2rem; /* Animate into view */
         }
         #golden-thread.nervous {
             animation: nervous-pulse 0.5s infinite ease-in-out;
         }
         #golden-thread.learning {
-            background-color: #3B82F6; /* blue-500 */
+            background-color: #3B82F6;
             box-shadow: 0 0 15px 5px rgba(59, 130, 246, 0.6);
         }
         #golden-thread.finale-prep {
@@ -177,6 +182,64 @@
             <div class="w-full max-w-4xl relative">
                 <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
                 <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
+                
+                <!-- Timeline items are now static in HTML -->
+                <div class="timeline-item mb-12 flex items-center w-full">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">יום 7: ההפרשה והבידוד</p>
+                        <p class="text-gray-300">הכהן הגדול מועבר מביתו ללשכת פרהדרין. ניתוק מוחלט מהעולם החיצון כדי להתקדש.</p>
+                    </div>
+                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">7</div></div>
+                    <div class="w-5/12"></div>
+                </div>
+                <div class="timeline-item mb-12 flex items-center w-full flex-row-reverse">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
+                        <p class="font-bold text-lg text-amber-400">יום 6: לימוד הלכות</p>
+                        <p class="text-gray-300">זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב.</p>
+                    </div>
+                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">6</div></div>
+                    <div class="w-5/12"></div>
+                </div>
+                <div class="timeline-item mb-12 flex items-center w-full">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">יום 5: הזאות מי חטאת</p>
+                        <p class="text-gray-300">מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע.</p>
+                    </div>
+                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">5</div></div>
+                    <div class="w-5/12"></div>
+                </div>
+                 <div class="timeline-item mb-12 flex items-center w-full flex-row-reverse">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
+                        <p class="font-bold text-lg text-amber-400">יום 4: תרגול מעשי</p>
+                        <p class="text-gray-300">הוא מתרגל את העבודות הקשות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו.</p>
+                    </div>
+                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">4</div></div>
+                    <div class="w-5/12"></div>
+                </div>
+                 <div class="timeline-item mb-12 flex items-center w-full">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">יום 3: לחץ פסיכולוגי</p>
+                        <p class="text-gray-300">האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר.</p>
+                    </div>
+                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">3</div></div>
+                    <div class="w-5/12"></div>
+                </div>
+                <div class="timeline-item mb-12 flex items-center w-full flex-row-reverse">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
+                        <p class="font-bold text-lg text-amber-400">יום 2: עימות תיאולוגי</p>
+                        <p class="text-gray-300">החשש מפני שינוי סדר הקטורת על ידי הצדוקים מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני.</p>
+                    </div>
+                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">2</div></div>
+                    <div class="w-5/12"></div>
+                </div>
+                <div class="timeline-item mb-12 flex items-center w-full">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">יום 1: השבועה והבכי</p>
+                        <p class="text-gray-300">ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו.</p>
+                    </div>
+                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">1</div></div>
+                    <div class="w-5/12"></div>
+                </div>
             </div>
         </section>
         
@@ -245,109 +308,6 @@
     </main>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const goldenThread = document.getElementById('golden-thread');
-
-        // --- Intersection Observer for fade-in and thread state ---
-        const sections = document.querySelectorAll('section');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    const state = entry.target.getAttribute('data-thread-state');
-                    if (goldenThread && state) {
-                        goldenThread.className = 'thread-visible'; // Base class
-                        goldenThread.classList.add(state);
-                    }
-                }
-            });
-        }, { threshold: 0.3 });
-
-        sections.forEach(section => observer.observe(section));
-
-        // --- Hero Section parallax scroll effect ---
-        const hero = document.getElementById('hero');
-        window.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
-            if (hero) {
-                hero.style.opacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.7));
-            }
-        });
-
-        // --- Timeline scroll-linked animation ---
-        const timelineSection = document.getElementById('timeline-section');
-        if (timelineSection) {
-            const timelineContainer = timelineSection.querySelector('.w-full.max-w-4xl');
-            const itemsData = [
-                { day: 7, title: "ההפרשה והבידוד", desc: "הכהן הגדול מועבר מביתו ללשכת פרהדרין. ניתוק מוחלט מהעולם החיצון כדי להתקדש." },
-                { day: 6, title: "לימוד הלכות עבודת היום", desc: "זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב." },
-                { day: 5, title: "הזאות מי חטאת", desc: "מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע." },
-                { day: 4, title: "תרגול מעשי", desc: "הוא מתרגל את העבודות הקשות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו." },
-                { day: 3, title: "לחץ פסיכולוגי שיא", desc: "האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר." },
-                { day: 2, title: "הכנה לעימות התיאולוגי", desc: "החשש מפני שינוי סדר הקטורת על ידי הצדוקים מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני." },
-                { day: 1, title: "השבועה והבכי", desc: "ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו." },
-            ];
-
-            itemsData.forEach((item, index) => {
-                const isReversed = index % 2 !== 0;
-                const itemWrapper = document.createElement('div');
-                itemWrapper.className = `timeline-item mb-12 flex items-center w-full ${isReversed ? 'flex-row-reverse' : ''}`;
-                
-                itemWrapper.innerHTML = `
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: ${isReversed ? '50px' : '-50px'}">
-                        <p class="font-bold text-lg text-amber-400">יום ${item.day}: ${item.title}</p>
-                        <p class="text-gray-300">${item.desc}</p>
-                    </div>
-                    <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">${item.day}</div>
-                    </div>
-                    <div class="w-5/12"></div>
-                `;
-                timelineContainer.appendChild(itemWrapper);
-            });
-            
-            const timelineItems = document.querySelectorAll('.timeline-item');
-            const timelineObserver = new IntersectionObserver((entries) => {
-                 entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('is-visible');
-                });
-            }, { threshold: 0.5 });
-            
-            timelineItems.forEach(item => timelineObserver.observe(item));
-
-            const timelineProgressEl = document.getElementById('timeline-progress');
-            window.addEventListener('scroll', () => {
-                const rect = timelineSection.getBoundingClientRect();
-                const start = rect.top + window.scrollY;
-                const progress = (window.scrollY - start) / (rect.height - window.innerHeight);
-                const clampedProgress = Math.max(0, Math.min(1, progress));
-                if (timelineProgressEl) timelineProgressEl.style.height = `${clampedProgress * 100}%`;
-            });
-        }
-
-        // --- Finale Canvas Animation ---
-        const finaleSection = document.getElementById('finale');
-        const canvas = document.getElementById('finale-canvas');
-        const finaleText = document.getElementById('finale-text');
-        const ctx = canvas.getContext('2d');
-        let animationFrameId;
-        let particles = [];
-        let animationState = 'idle';
-
-        function resizeCanvas() {
-            if(canvas) {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-        }
-        
-        class Particle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 8 + 2;
-                this.vx = Math.cos(angle) * speed;
-                this.vy = Math.sin(angle) * speed;
-                this.alpha = 1;
-      
+    // Self-executing function to avoid polluting the global scope
+    (function() {
+        // Wait for the DOM to be fully 
