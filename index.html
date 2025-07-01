@@ -18,7 +18,7 @@
             background-color: #0c0c0c;
             color: #e0e0e0;
             font-family: 'Assistant', sans-serif;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         .font-serif {
             font-family: 'Noto Serif Hebrew', serif;
@@ -99,13 +99,11 @@
         }
         #golden-thread.finale-prep {
             animation: none;
-            transform: translate(-50vw, -50vh) scale(20);
-            box-shadow: 0 0 100px 50px rgba(251, 191, 36, 0.8);
+            transition: transform 1s cubic-bezier(0.5, 0, 0.75, 0), opacity 1s linear;
+            transform: translate(-50vw, -50vh) scale(3);
+            opacity: 0;
         }
-        #golden-thread.hidden {
-            transform: scale(0);
-        }
-
+        
         @keyframes pulse {
             0%, 100% { transform: scale(1); box-shadow: 0 0 15px 5px rgba(251, 191, 36, 0.6); }
             50% { transform: scale(1.1); box-shadow: 0 0 25px 10px rgba(251, 191, 36, 0.7); }
@@ -115,34 +113,83 @@
             50% { transform: scale(1.2); box-shadow: 0 0 20px 8px rgba(220, 50, 47, 0.8); background-color: #ef4444; }
         }
 
-        /* Finale Canvas Styling */
-        #finale-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: transparent;
-            z-index: 40;
+        /* Scroll down indicator animation */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
+        .animate-bounce-y {
+            animation: bounce 1.5s infinite;
+        }
+
+        /* Finale CSS Animation */
+        #finale {
+            background-color: #0c0c0c;
+        }
+        #finale-content {
+            opacity: 0;
+            transition: opacity 1s ease-in 1.5s; /* Fade in after shatter */
+        }
+        #finale.is-visible #finale-content {
+            opacity: 1;
+        }
+        #finale::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #0c0c0c;
+            z-index: 10;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+            transition: clip-path 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+        #finale.is-visible::before {
+            clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
+        }
+
+        /* Golden Thread Status */
+        #golden-thread-status {
+            position: fixed;
+            bottom: 2rem;
+            right: 3.5rem; /* Position next to the golden thread */
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            z-index: 999; /* Below golden thread but above content */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #golden-thread-status.is-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
     </style>
 </head>
 <body class="bg-[#0c0c0c]">
 
     <div id="golden-thread"></div>
+    <div id="golden-thread-status" class="hidden md:block"></div> <!-- Hidden on small screens -->
 
-    <header id="hero" class="h-screen w-full flex flex-col items-center justify-center text-center text-white sticky top-0 -z-10">
+    <header id="hero" class="h-screen w-full flex flex-col items-center justify-center text-center text-white sticky top-0 z-10">
         <div class="absolute inset-0 bg-black opacity-70"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
         <h1 class="text-6xl md:text-9xl font-serif font-extrabold tracking-tighter text-shadow-gold z-10">יוֹמָא</h1>
         <h2 class="text-2xl md:text-4xl mt-4 font-light text-gray-200 z-10">שבעה ימים בלשכת פרהדרין</h2>
-        <p class="mt-8 text-lg text-amber-400 z-10 animate-pulse">גְלֹל מַטָה כְּדֵי לְהִכָּנֵס</p>
+        <p class="mt-8 text-lg text-amber-400 z-10 flex items-center animate-bounce-y">
+            גְלֹל מַטָה כְּדֵי לְהִכָּנֵס
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </p>
     </header>
 
     <main id="content" class="relative z-20 bg-[#0c0c0c]">
-        <div style="height: 100vh;"></div>
+        <!-- Removed the empty div with height: 100vh; -->
 
-        <section data-thread-state="default" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
+        <section data-thread-state="default" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section pt-[100vh]">
             <h2 class="text-3xl md:text-5xl font-serif max-w-4xl text-center leading-relaxed">
                 "שִׁבְעַת יָמִים קֹדֶם יוֹם הַכִּפּוּרִים, מַפְרִישִׁין כֹּהֵן גָּדוֹל מִבֵּיתוֹ לְלִשְׁכַּת פַּרְהֶדְרִין."
             </h2>
@@ -183,62 +230,62 @@
                 <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
                 <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
                 
-                <!-- Timeline items are now static in HTML -->
-                <div class="timeline-item mb-12 flex items-center w-full">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                <!-- Timeline items are now responsive -->
+                <div class="timeline-item mb-12 flex flex-col md:flex-row items-center w-full">
+                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30 md:ml-auto" style="--direction: -50px;">
                         <p class="font-bold text-lg text-amber-400">יום 7: ההפרשה והבידוד</p>
                         <p class="text-gray-300">הכהן הגדול מועבר מביתו ללשכת פרהדרין. ניתוק מוחלט מהעולם החיצון כדי להתקדש.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">7</div></div>
-                    <div class="w-5/12"></div>
+                    <div class="w-full md:w-2/12 flex justify-center py-4 md:py-0"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">7</div></div>
+                    <div class="w-full md:w-5/12 hidden md:block"></div>
                 </div>
-                <div class="timeline-item mb-12 flex items-center w-full flex-row-reverse">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
+                <div class="timeline-item mb-12 flex flex-col md:flex-row-reverse items-center w-full">
+                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30 md:mr-auto" style="--direction: 50px;">
                         <p class="font-bold text-lg text-amber-400">יום 6: לימוד הלכות</p>
                         <p class="text-gray-300">זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">6</div></div>
-                    <div class="w-5/12"></div>
+                    <div class="w-full md:w-2/12 flex justify-center py-4 md:py-0"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">6</div></div>
+                    <div class="w-full md:w-5/12 hidden md:block"></div>
                 </div>
-                <div class="timeline-item mb-12 flex items-center w-full">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                <div class="timeline-item mb-12 flex flex-col md:flex-row items-center w-full">
+                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30 md:ml-auto" style="--direction: -50px;">
                         <p class="font-bold text-lg text-amber-400">יום 5: הזאות מי חטאת</p>
                         <p class="text-gray-300">מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">5</div></div>
-                    <div class="w-5/12"></div>
+                    <div class="w-full md:w-2/12 flex justify-center py-4 md:py-0"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">5</div></div>
+                    <div class="w-full md:w-5/12 hidden md:block"></div>
                 </div>
-                 <div class="timeline-item mb-12 flex items-center w-full flex-row-reverse">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
+                   <div class="timeline-item mb-12 flex flex-col md:flex-row-reverse items-center w-full">
+                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30 md:mr-auto" style="--direction: 50px;">
                         <p class="font-bold text-lg text-amber-400">יום 4: תרגול מעשי</p>
                         <p class="text-gray-300">הוא מתרגל את העבודות הקשות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">4</div></div>
-                    <div class="w-5/12"></div>
+                    <div class="w-full md:w-2/12 flex justify-center py-4 md:py-0"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">4</div></div>
+                    <div class="w-full md:w-5/12 hidden md:block"></div>
                 </div>
-                 <div class="timeline-item mb-12 flex items-center w-full">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                   <div class="timeline-item mb-12 flex flex-col md:flex-row items-center w-full">
+                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30 md:ml-auto" style="--direction: -50px;">
                         <p class="font-bold text-lg text-amber-400">יום 3: לחץ פסיכולוגי</p>
                         <p class="text-gray-300">האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">3</div></div>
-                    <div class="w-5/12"></div>
+                    <div class="w-full md:w-2/12 flex justify-center py-4 md:py-0"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">3</div></div>
+                    <div class="w-full md:w-5/12 hidden md:block"></div>
                 </div>
-                <div class="timeline-item mb-12 flex items-center w-full flex-row-reverse">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
+                <div class="timeline-item mb-12 flex flex-col md:flex-row-reverse items-center w-full">
+                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30 md:mr-auto" style="--direction: 50px;">
                         <p class="font-bold text-lg text-amber-400">יום 2: עימות תיאולוגי</p>
                         <p class="text-gray-300">החשש מפני שינוי סדר הקטורת על ידי הצדוקים מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">2</div></div>
-                    <div class="w-5/12"></div>
+                    <div class="w-full md:w-2/12 flex justify-center py-4 md:py-0"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">2</div></div>
+                    <div class="w-full md:w-5/12 hidden md:block"></div>
                 </div>
-                <div class="timeline-item mb-12 flex items-center w-full">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                <div class="timeline-item mb-12 flex flex-col md:flex-row items-center w-full">
+                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30 md:ml-auto" style="--direction: -50px;">
                         <p class="font-bold text-lg text-amber-400">יום 1: השבועה והבכי</p>
                         <p class="text-gray-300">ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">1</div></div>
-                    <div class="w-5/12"></div>
+                    <div class="w-full md:w-2/12 flex justify-center py-4 md:py-0"><div class="timeline-dot w-8 h-8 rounded-full bg-black border-2 border-amber-400 z-10 flex items-center justify-center font-bold">1</div></div>
+                    <div class="w-full md:w-5/12 hidden md:block"></div>
                 </div>
             </div>
         </section>
@@ -292,16 +339,13 @@
             </div>
         </section>
 
-        <section id="finale" class="relative h-screen w-full bg-[#0c0c0c]">
-            <canvas id="finale-canvas"></canvas>
-            <div id="finale-text-wrapper" class="absolute inset-0 flex items-center justify-center z-50">
-                <div id="finale-text" class="text-center opacity-0 transition-opacity duration-1000">
-                    <h3 class="text-3xl font-serif text-amber-400 mb-4">היציאה מהלשכה</h3>
-                    <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-                        הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר.
-                    </p>
-                    <h2 class="text-4xl md:text-6xl font-serif text-amber-300 text-shadow-gold">הוּא מוּכָן.</h2>
-                </div>
+        <section id="finale" class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+            <div id="finale-content" class="relative z-20 text-center p-8">
+                <h3 class="text-3xl font-serif text-amber-400 mb-4">היציאה מהלשכה</h3>
+                <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
+                    הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר.
+                </p>
+                <h2 class="text-4xl md:text-6xl font-serif text-amber-300 text-shadow-gold">הוּא מוּכָן.</h2>
             </div>
         </section>
 
@@ -310,4 +354,132 @@
     <script>
     // Self-executing function to avoid polluting the global scope
     (function() {
-        // Wait for the DOM to be fully 
+        // Wait for the DOM to be fully loaded before running any scripts
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // --- Element Selectors ---
+                const goldenThread = document.getElementById('golden-thread');
+                const goldenThreadStatus = document.getElementById('golden-thread-status');
+                const hero = document.getElementById('hero');
+                const sections = document.querySelectorAll('section');
+                const timelineSection = document.getElementById('timeline-section');
+                const timelineProgressEl = document.getElementById('timeline-progress');
+                const timelineItems = document.querySelectorAll('.timeline-item');
+                const finaleSection = document.getElementById('finale');
+
+                // --- Safety Check: Ensure critical elements exist ---
+                // More robust checks for all elements the script interacts with
+                if (!goldenThread || !hero || sections.length === 0 || !goldenThreadStatus ||
+                    (timelineSection && (!timelineProgressEl || timelineItems.length === 0))) {
+                    console.error("Critical elements are missing. Aborting script.");
+                    return;
+                }
+                
+                // --- Activate Golden Thread ---
+                setTimeout(() => {
+                    goldenThread.classList.add('is-active');
+                    goldenThread.style.animation = 'pulse 2s infinite ease-in-out';
+                    goldenThreadStatus.classList.add('is-visible');
+                    goldenThreadStatus.textContent = 'התקדמות'; // Initial status
+                }, 100);
+
+                // --- Intersection Observer for fade-in and thread state ---
+                const sectionObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            const state = entry.target.getAttribute('data-thread-state');
+                            let statusText = '';
+                            if (state) {
+                                goldenThread.className = 'is-active'; // Reset classes
+                                goldenThread.classList.add(state);
+                                goldenThread.style.animation = state === 'nervous' ? 'nervous-pulse 0.5s infinite ease-in-out' : 'pulse 2s infinite ease-in-out';
+                                
+                                // Update status text based on state
+                                switch (state) {
+                                    case 'default':
+                                        statusText = 'התקדמות';
+                                        break;
+                                    case 'nervous':
+                                        statusText = 'חשש';
+                                        break;
+                                    case 'learning':
+                                        statusText = 'למידה';
+                                        break;
+                                    default:
+                                        statusText = 'התקדמות';
+                                }
+                                goldenThreadStatus.textContent = statusText;
+                            }
+                            // Special handling for finale
+                            if (entry.target.id === 'finale') {
+                                goldenThread.classList.add('finale-prep');
+                                goldenThreadStatus.textContent = 'סיום';
+                            }
+                        }
+                    });
+                }, { threshold: 0.5 }); // Adjust threshold as needed for when sections become "active"
+
+                sections.forEach(section => sectionObserver.observe(section));
+
+                // --- Scroll-linked animations using requestAnimationFrame ---
+                let ticking = false;
+                const updateScrollAnimations = () => {
+                    // Hero Section parallax scroll effect
+                    const scrollY = window.scrollY;
+                    hero.style.opacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.7));
+
+                    // Timeline scroll-linked animation
+                    if (timelineSection && timelineProgressEl) {
+                        const rect = timelineSection.getBoundingClientRect();
+                        // Calculate progress relative to the timeline section's visibility in the viewport
+                        const start = rect.top;
+                        const end = rect.bottom - window.innerHeight;
+                        let progress = 0;
+
+                        if (start < 0 && end > 0) { // If timeline section is partially or fully in view
+                            progress = Math.abs(start) / (rect.height - window.innerHeight);
+                            progress = Math.max(0, Math.min(1, progress)); // Clamp between 0 and 1
+                        } else if (start >= 0) { // Before timeline section
+                            progress = 0;
+                        } else if (end <= 0) { // After timeline section
+                            progress = 1;
+                        }
+                        timelineProgressEl.style.height = `${progress * 100}%`;
+                    }
+                    ticking = false;
+                };
+
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(updateScrollAnimations);
+                        ticking = true;
+                    }
+                });
+
+                // Initial call to set correct state on load
+                updateScrollAnimations();
+
+                // --- Timeline item fade-in observer ---
+                if (timelineItems.length > 0) {
+                    const timelineItemObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('is-visible');
+                            }
+                        });
+                    }, { threshold: 0.5, rootMargin: '0px 0px -10% 0px' }); // Slightly lower threshold for items
+
+                    timelineItems.forEach(item => timelineItemObserver.observe(item));
+                }
+
+            } catch (error) {
+                console.error("An error occurred during script execution:", error);
+                // Fallback to make content visible if script fails
+                document.body.style.opacity = 1;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
