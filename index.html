@@ -46,14 +46,15 @@
         .fade-in-section {
             opacity: 0;
             transform: translateY(40px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Reduced from 0.8s */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
         .fade-in-section.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .timeline-item .timeline-item-content, .timeline-item .timeline-dot {
+        /* Timeline specific animations (content boxes slide in) */
+        .timeline-item .timeline-item-content {
             opacity: 0;
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
@@ -61,17 +62,9 @@
         .timeline-item .timeline-item-content {
              transform: translateX(var(--direction, 50px));
         }
-        .timeline-item .timeline-dot {
-            transform: scale(0);
-        }
-
         .timeline-item.is-visible .timeline-item-content {
             opacity: 1;
             transform: translateX(0);
-        }
-        .timeline-item.is-visible .timeline-dot {
-            opacity: 1;
-            transform: scale(1);
         }
 
         /* Golden Thread Element */
@@ -166,81 +159,55 @@
             visibility: visible;
         }
 
-        /* Timeline specific adjustments for responsiveness */
-        /* Central line and progress line */
+        /* Timeline specific adjustments */
+        /* Central line and progress line - positioned on the right of the timeline section */
         #timeline-section .absolute.bg-amber-400\/20,
         #timeline-section #timeline-progress {
-            /* Default for desktop */
-            left: 50%;
-            right: auto;
-            margin-left: -1.5px; /* -w/2 of the line */
-        }
-        @media (max-width: 767px) { /* Mobile styles */
-            #timeline-section .absolute.bg-amber-400\/20,
-            #timeline-section #timeline-progress {
-                left: auto; /* Reset left */
-                right: 1.5rem; /* Position on the right for RTL mobile (3rem from edge, line is 12px wide, so 1.5rem + 6px) */
-                margin-left: 0; /* Reset margin */
-            }
+            left: auto; /* Reset left */
+            right: 1.5rem; /* Position 1.5rem from the right edge of its parent (max-w-4xl) */
+            margin-left: 0; /* Reset margin */
+            margin-right: -1.5px; /* Half width of the line to center it on the right */
         }
 
-        /* Timeline item adjustments */
         .timeline-item {
-            position: relative; /* Needed for absolute positioning of dots on mobile */
+            display: flex;
+            align-items: center; /* Vertically center content */
+            width: 100%; /* Take full width of its parent (max-w-4xl) */
+            margin-bottom: 3rem; /* Space between items */
+            position: relative; /* For correct z-index and positioning */
+            justify-content: flex-start; /* All content pushed to the left */
         }
 
-        /* Content side for mobile (all content on the left, line on the right) */
+        /* Content box styling */
+        .timeline-item-content {
+            padding: 1rem;
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3), 0 0 25px rgba(251, 191, 36, 0.2);
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 2; /* Ensure content is above the line */
+            width: calc(100% - 3rem); /* Full width minus space for the line on the right */
+            margin-right: 3rem; /* Space from the right line */
+            margin-left: 0; /* Ensure no left margin */
+        }
+        .timeline-item-content:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.5), 0 0 40px rgba(251, 191, 36, 0.3);
+        }
+
+        /* Mobile adjustments (all content on left, line on right) */
         @media (max-width: 767px) {
             .timeline-item {
-                flex-direction: column; /* Ensure column layout on mobile */
-                align-items: flex-start; /* Align content to the left for RTL */
-                padding-right: 4rem; /* Space for the line and dot on the right (right: 1.5rem + dot width + margin) */
-                padding-left: 0; /* Ensure no left padding from reversed items */
+                margin-bottom: 2rem; /* Slightly less margin on mobile */
             }
-            /* Override for reversed items on mobile to keep consistent layout */
-            .timeline-item.md\:flex-row-reverse { /* Use md:flex-row-reverse to target only desktop reversed items */
-                flex-direction: column;
-                align-items: flex-start;
-                padding-right: 4rem;
-                padding-left: 0;
-            }
-            .timeline-item .timeline-item-content {
-                width: 100%; /* Full width for content on mobile */
-                margin-right: 0; /* Reset margins */
-                margin-left: 0;
-                transform: translateY(20px); /* Slide up from bottom on mobile */
-            }
-            .timeline-item.is-visible .timeline-item-content {
-                transform: translateY(0); /* Final position for mobile slide-in */
-            }
-            .timeline-item .timeline-dot {
-                position: absolute;
-                right: 1.5rem; /* Align dot to the line on the right */
-                top: 50%;
-                transform: translateY(-50%);
-            }
-            /* Hide the empty div that used to be on the other side for desktop */
-            .timeline-item > .w-5\/12.hidden.md\:block {
-                display: none;
-            }
-            /* Ensure the dot container doesn't take up space on mobile */
-            .timeline-item > .w-2\/12 {
-                width: auto; /* Let it shrink */
-                padding: 0; /* Remove padding */
-            }
-        }
-
-        /* Revert for desktop */
-        @media (min-width: 768px) {
-            .timeline-item {
-                padding-right: 0; /* Remove mobile padding */
-                padding-left: 0;
-            }
-            .timeline-item .timeline-dot {
-                position: static; /* Revert to static for desktop flex layout */
-                transform: none;
-                width: 8.333333%; /* w-1/12 */
-                margin: 0 auto; /* Center within its flex container */
+            .timeline-item-content {
+                width: calc(100% - 2rem); /* Adjust width for mobile, smaller gap */
+                padding: 0.75rem; /* Smaller padding on mobile */
+                margin-right: 2rem; /* Smaller margin for mobile from the line */
             }
         }
     </style>
@@ -302,82 +269,54 @@
         </section>
 
         <section id="timeline-section" data-thread-state="default" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
-            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16">סדר היום בלשכה: שבעה ימי הכנה</h3>
+            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16 text-center">סדר היום בלשכה: שבעה ימי הכנה</h3>
             <div class="w-full max-w-4xl relative">
-                <!-- Timeline vertical line and progress bar -->
-                <div class="absolute top-0 bottom-0 bg-amber-400/20 rounded-full w-3 left-1/2 -ml-[1.5px] md:left-1/2 md:right-auto md:-ml-[1.5px]"></div>
-                <div id="timeline-progress" class="absolute top-0 bg-amber-400 rounded-full w-3 left-1/2 -ml-[1.5px] md:left-1/2 md:right-auto md:-ml-[1.5px]" style="height: 0%;"></div>
+                <!-- The main vertical line and progress line -->
+                <div class="absolute top-0 bottom-0 right-0 -mr-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
+                <div id="timeline-progress" class="absolute top-0 right-0 -mr-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
                 
-                <!-- Timeline items are now responsive -->
-                <div class="timeline-item mb-12 flex flex-col items-start w-full pr-12 md:flex-row md:items-center md:justify-start">
-                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30">
-                        <p class="font-bold text-lg text-amber-400">יום 7: ההפרשה והבידוד</p>
+                <!-- Timeline items with text days inside the content box -->
+                <div class="timeline-item mb-12">
+                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">היום השביעי: ההפרשה והבידוד</p>
                         <p class="text-gray-300">הכהן הגדול מועבר מביתו ללשכת פרהדרין. ניתוק מוחלט מהעולם החיצון כדי להתקדש.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center py-4 md:py-0">
-                        <div class="timeline-dot w-8 h-8 rounded-full bg-transparent z-10 flex items-center justify-center font-bold text-amber-400">7</div>
-                    </div>
-                    <div class="w-5/12 hidden md:block"></div>
                 </div>
-                <div class="timeline-item mb-12 flex flex-col items-end w-full pl-12 md:flex-row-reverse md:items-center md:justify-end">
-                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30">
-                        <p class="font-bold text-lg text-amber-400">יום 6: לימוד הלכות</p>
+                <div class="timeline-item mb-12">
+                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">היום השישי: לימוד הלכות</p>
                         <p class="text-gray-300">זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center py-4 md:py-0">
-                        <div class="timeline-dot w-8 h-8 rounded-full bg-transparent z-10 flex items-center justify-center font-bold text-amber-400">6</div>
-                    </div>
-                    <div class="w-5/12 hidden md:block"></div>
                 </div>
-                <div class="timeline-item mb-12 flex flex-col items-start w-full pr-12 md:flex-row md:items-center md:justify-start">
-                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30">
-                        <p class="font-bold text-lg text-amber-400">יום 5: הזאות מי חטאת</p>
+                <div class="timeline-item mb-12">
+                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">היום החמישי: הזאות מי חטאת</p>
                         <p class="text-gray-300">מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center py-4 md:py-0">
-                        <div class="timeline-dot w-8 h-8 rounded-full bg-transparent z-10 flex items-center justify-center font-bold text-amber-400">5</div>
-                    </div>
-                    <div class="w-5/12 hidden md:block"></div>
                 </div>
-                   <div class="timeline-item mb-12 flex flex-col items-end w-full pl-12 md:flex-row-reverse md:items-center md:justify-end">
-                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30">
-                        <p class="font-bold text-lg text-amber-400">יום 4: תרגול מעשי</p>
+                   <div class="timeline-item mb-12">
+                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">היום הרביעי: תרגול מעשי</p>
                         <p class="text-gray-300">הוא מתרגל את העבודות הקשות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center py-4 md:py-0">
-                        <div class="timeline-dot w-8 h-8 rounded-full bg-transparent z-10 flex items-center justify-center font-bold text-amber-400">4</div>
-                    </div>
-                    <div class="w-5/12 hidden md:block"></div>
                 </div>
-                   <div class="timeline-item mb-12 flex flex-col items-start w-full pr-12 md:flex-row md:items-center md:justify-start">
-                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30">
-                        <p class="font-bold text-lg text-amber-400">יום 3: לחץ פסיכולוגי</p>
+                   <div class="timeline-item mb-12">
+                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">היום השלישי: לחץ פסיכולוגי</p>
                         <p class="text-gray-300">האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center py-4 md:py-0">
-                        <div class="timeline-dot w-8 h-8 rounded-full bg-transparent z-10 flex items-center justify-center font-bold text-amber-400">3</div>
-                    </div>
-                    <div class="w-5/12 hidden md:block"></div>
                 </div>
-                <div class="timeline-item mb-12 flex flex-col items-end w-full pl-12 md:flex-row-reverse md:items-center md:justify-end">
-                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30">
-                        <p class="font-bold text-lg text-amber-400">יום 2: עימות תיאולוגי</p>
+                <div class="timeline-item mb-12">
+                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">היום השני: עימות תיאולוגי</p>
                         <p class="text-gray-300">החשש מפני שינוי סדר הקטורת על ידי הצדוקים מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center py-4 md:py-0">
-                        <div class="timeline-dot w-8 h-8 rounded-full bg-transparent z-10 flex items-center justify-center font-bold text-amber-400">2</div>
-                    </div>
-                    <div class="w-5/12 hidden md:block"></div>
                 </div>
-                <div class="timeline-item mb-12 flex flex-col items-start w-full pr-12 md:flex-row md:items-center md:justify-start">
-                    <div class="w-full md:w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30">
-                        <p class="font-bold text-lg text-amber-400">יום 1: השבועה והבכי</p>
+                <div class="timeline-item mb-12">
+                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                        <p class="font-bold text-lg text-amber-400">היום הראשון: השבועה והבכי</p>
                         <p class="text-gray-300">ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו.</p>
                     </div>
-                    <div class="w-2/12 flex justify-center py-4 md:py-0">
-                        <div class="timeline-dot w-8 h-8 rounded-full bg-transparent z-10 flex items-center justify-center font-bold text-amber-400">1</div>
-                    </div>
-                    <div class="w-5/12 hidden md:block"></div>
                 </div>
             </div>
         </section>
@@ -426,7 +365,6 @@
                  <div class="mt-8 text-center">
                      <h5 class="text-2xl font-bold text-yellow-200">הפתרון הדרמטי: השבועה</h5>
                      <p class="text-lg mt-2 max-w-2xl mx-auto">"מַשְׁבִּיעִין אָנוּ עָלֶיךָ בְּמִי שֶׁשִּׁכֵּן שְׁמוֹ בַּבַּיִת הַזֶּה, שֶׁלֹּא תְּשַׁנֶּה דָּבָר מִכָּל מַה שֶּׁאָמַרְנוּ לָךְ."</p>
-                     <p class="text-gray-400 mt-2">רגע של שיא דרמטי. הכהן, מבודד ובוכה על החשד, נשבע לקיים את מסורת חז"ל. והזקנים בוכים עמו על שנאלצו לחשוד בו.</p>
                  </div>
             </div>
         </section>
@@ -457,10 +395,8 @@
                 const timelineSection = document.getElementById('timeline-section');
                 const timelineProgressEl = document.getElementById('timeline-progress');
                 const timelineItems = document.querySelectorAll('.timeline-item');
-                const finaleSection = document.getElementById('finale');
 
                 // --- Safety Check: Ensure critical elements exist ---
-                // More robust checks for all elements the script interacts with
                 if (!goldenThread || !hero || sections.length === 0 || !goldenThreadStatus ||
                     (timelineSection && (!timelineProgressEl || timelineItems.length === 0))) {
                     console.error("Critical elements are missing. Aborting script.");
@@ -524,17 +460,16 @@
                     // Timeline scroll-linked animation
                     if (timelineSection && timelineProgressEl) {
                         const rect = timelineSection.getBoundingClientRect();
-                        // Calculate progress relative to the timeline section's visibility in the viewport
                         const start = rect.top;
                         const end = rect.bottom - window.innerHeight;
                         let progress = 0;
 
-                        if (start < 0 && end > 0) { // If timeline section is partially or fully in view
+                        if (start < 0 && end > 0) {
                             progress = Math.abs(start) / (rect.height - window.innerHeight);
-                            progress = Math.max(0, Math.min(1, progress)); // Clamp between 0 and 1
-                        } else if (start >= 0) { // Before timeline section
+                            progress = Math.max(0, Math.min(1, progress));
+                        } else if (start >= 0) {
                             progress = 0;
-                        } else if (end <= 0) { // After timeline section
+                        } else if (end <= 0) {
                             progress = 1;
                         }
                         timelineProgressEl.style.height = `${progress * 100}%`;
