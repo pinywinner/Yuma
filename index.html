@@ -53,8 +53,8 @@
             transform: translateY(0);
         }
 
-        /* Timeline specific animations (content boxes slide in) */
-        .timeline-item .timeline-item-content {
+        /* Timeline specific animations */
+        .timeline-item .timeline-item-content, .timeline-item .timeline-dot {
             opacity: 0;
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
@@ -65,6 +65,13 @@
         .timeline-item.is-visible .timeline-item-content {
             opacity: 1;
             transform: translateX(0);
+        }
+        .timeline-item .timeline-dot {
+            transform: scale(0);
+        }
+        .timeline-item.is-visible .timeline-dot {
+            opacity: 1;
+            transform: scale(1);
         }
 
         /* Golden Thread Element */
@@ -160,22 +167,20 @@
         }
 
         /* Timeline specific adjustments */
-        /* Central line and progress line - positioned on the right of the timeline section */
+        /* Central line and progress line - always centered */
         #timeline-section .absolute.bg-amber-400\/20,
         #timeline-section #timeline-progress {
-            left: auto; /* Reset left */
-            right: 1.5rem; /* Position 1.5rem from the right edge of its parent (max-w-4xl) */
-            margin-left: 0; /* Reset margin */
-            margin-right: -1.5px; /* Half width of the line to center it on the right */
+            left: 50%;
+            right: auto;
+            margin-left: -1.5px; /* Half width of the line to center it */
         }
 
         .timeline-item {
             display: flex;
-            align-items: center; /* Vertically center content */
+            align-items: center; /* Vertically center content and dot */
             width: 100%; /* Take full width of its parent (max-w-4xl) */
             margin-bottom: 3rem; /* Space between items */
             position: relative; /* For correct z-index and positioning */
-            justify-content: flex-start; /* All content pushed to the left */
         }
 
         /* Content box styling */
@@ -190,24 +195,71 @@
             flex-direction: column;
             justify-content: space-between;
             z-index: 2; /* Ensure content is above the line */
-            width: calc(100% - 3rem); /* Full width minus space for the line on the right */
-            margin-right: 3rem; /* Space from the right line */
-            margin-left: 0; /* Ensure no left margin */
         }
         .timeline-item-content:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 0 25px rgba(251, 191, 36, 0.5), 0 0 40px rgba(251, 191, 36, 0.3);
         }
 
-        /* Mobile adjustments (all content on left, line on right) */
+        /* Positioning for left-aligned content (odd items) */
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-start; /* Push content to the left */
+        }
+        .timeline-item:nth-child(odd) .timeline-item-content {
+            width: calc(50% - 7rem); /* 50% minus width of dot + gap */
+            margin-right: 1rem; /* Gap from the dot */
+            margin-left: auto; /* Push to left */
+        }
+
+        /* Positioning for right-aligned content (even items) */
+        .timeline-item:nth-child(even) {
+            justify-content: flex-end; /* Push content to the right */
+        }
+        .timeline-item:nth-child(even) .timeline-item-content {
+            width: calc(50% - 7rem); /* 50% minus width of dot + gap */
+            margin-left: 1rem; /* Gap from the dot */
+            margin-right: auto; /* Push to right */
+        }
+
+        /* Timeline dot styling */
+        .timeline-item .timeline-dot {
+            width: 8rem; /* Width to accommodate text */
+            height: 2.5rem; /* Height */
+            border-radius: 0.5rem; /* Slightly rounded rectangle */
+            background-color: rgba(15, 23, 42, 0.9); /* Dark background for the dot */
+            color: #FBBF24; /* Text color */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.2; /* Adjust line height for vertical centering */
+            flex-shrink: 0; /* Prevent dot from shrinking */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-align: center;
+            z-index: 3; /* Ensure dot is above line and content */
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.2); /* Subtle glow */
+        }
+
+        /* Mobile adjustments */
         @media (max-width: 767px) {
             .timeline-item {
                 margin-bottom: 2rem; /* Slightly less margin on mobile */
             }
-            .timeline-item-content {
-                width: calc(100% - 2rem); /* Adjust width for mobile, smaller gap */
+            .timeline-item:nth-child(odd) .timeline-item-content,
+            .timeline-item:nth-child(even) .timeline-item-content {
+                width: calc(50% - 5rem); /* Adjust width for mobile, smaller gap */
                 padding: 0.75rem; /* Smaller padding on mobile */
-                margin-right: 2rem; /* Smaller margin for mobile from the line */
+            }
+            .timeline-item:nth-child(odd) .timeline-item-content {
+                margin-right: 0.5rem; /* Smaller margin for mobile */
+            }
+            .timeline-item:nth-child(even) .timeline-item-content {
+                margin-left: 0.5rem; /* Smaller margin for mobile */
+            }
+            .timeline-item .timeline-dot {
+                width: 6rem; /* Smaller width for mobile dot */
+                height: 2rem; /* Smaller height for mobile dot */
+                font-size: 0.75rem; /* Smaller font size for mobile */
             }
         }
     </style>
@@ -272,51 +324,79 @@
             <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16 text-center">סדר היום בלשכה: שבעה ימי הכנה</h3>
             <div class="w-full max-w-4xl relative">
                 <!-- The main vertical line and progress line -->
-                <div class="absolute top-0 bottom-0 right-0 -mr-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
-                <div id="timeline-progress" class="absolute top-0 right-0 -mr-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
+                <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
+                <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
                 
                 <!-- Timeline items with text days inside the content box -->
                 <div class="timeline-item mb-12">
-                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
                         <p class="font-bold text-lg text-amber-400">היום השביעי: ההפרשה והבידוד</p>
                         <p class="text-gray-300">הכהן הגדול מועבר מביתו ללשכת פרהדרין. ניתוק מוחלט מהעולם החיצון כדי להתקדש.</p>
                     </div>
+                    <div class="w-2/12 flex justify-center">
+                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום השביעי</div>
+                    </div>
+                    <div class="w-5/12"></div>
                 </div>
-                <div class="timeline-item mb-12">
-                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                <div class="timeline-item mb-12 flex-row-reverse">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
                         <p class="font-bold text-lg text-amber-400">היום השישי: לימוד הלכות</p>
                         <p class="text-gray-300">זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב.</p>
                     </div>
+                    <div class="w-2/12 flex justify-center">
+                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום השישי</div>
+                    </div>
+                    <div class="w-5/12"></div>
                 </div>
                 <div class="timeline-item mb-12">
-                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
                         <p class="font-bold text-lg text-amber-400">היום החמישי: הזאות מי חטאת</p>
                         <p class="text-gray-300">מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע.</p>
                     </div>
+                    <div class="w-2/12 flex justify-center">
+                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום החמישי</div>
+                    </div>
+                    <div class="w-5/12"></div>
                 </div>
-                   <div class="timeline-item mb-12">
-                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                   <div class="timeline-item mb-12 flex-row-reverse">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
                         <p class="font-bold text-lg text-amber-400">היום הרביעי: תרגול מעשי</p>
                         <p class="text-gray-300">הוא מתרגל את העבודות הקשות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו.</p>
                     </div>
+                    <div class="w-2/12 flex justify-center">
+                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום הרביעי</div>
+                    </div>
+                    <div class="w-5/12"></div>
                 </div>
                    <div class="timeline-item mb-12">
-                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
                         <p class="font-bold text-lg text-amber-400">היום השלישי: לחץ פסיכולוגי</p>
                         <p class="text-gray-300">האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר.</p>
                     </div>
+                    <div class="w-2/12 flex justify-center">
+                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום השלישי</div>
+                    </div>
+                    <div class="w-5/12"></div>
                 </div>
-                <div class="timeline-item mb-12">
-                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                <div class="timeline-item mb-12 flex-row-reverse">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
                         <p class="font-bold text-lg text-amber-400">היום השני: עימות תיאולוגי</p>
                         <p class="text-gray-300">החשש מפני שינוי סדר הקטורת על ידי הצדוקים מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני.</p>
                     </div>
+                    <div class="w-2/12 flex justify-center">
+                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום השני</div>
+                    </div>
+                    <div class="w-5/12"></div>
                 </div>
                 <div class="timeline-item mb-12">
-                    <div class="timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
+                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
                         <p class="font-bold text-lg text-amber-400">היום הראשון: השבועה והבכי</p>
                         <p class="text-gray-300">ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו.</p>
                     </div>
+                    <div class="w-2/12 flex justify-center">
+                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום הראשון</div>
+                    </div>
+                    <div class="w-5/12"></div>
                 </div>
             </div>
         </section>
