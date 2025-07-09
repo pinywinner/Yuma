@@ -3,590 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Holy of Holies: A Descent into the Chamber</title>
-    
+    <title>תיקון שיטת הממשל בישראל: אבחון ומרשם</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;700;900&display=swap" rel="stylesheet">
-
     <style>
-        /* Base styling */
         body {
-            background-color: #0c0c0c;
-            color: #e0e0e0;
             font-family: 'Assistant', sans-serif;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            background-color: #F8F9FA;
+            color: #212529;
         }
-        .font-serif {
-            font-family: 'Noto Serif Hebrew', serif;
+        .section-title {
+            color: #003366;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 0.5rem;
         }
-        /* Glow and shadow effects */
-        .text-shadow-gold {
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 0 0 12px rgba(251, 191, 36, 0.6);
-        }
-        .card-glow {
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3), 0 0 25px rgba(251, 191, 36, 0.2);
-            transition: all 0.3s ease-in-out;
-        }
-        .card-glow:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 0 25px rgba(251, 191, 36, 0.5), 0 0 40px rgba(251, 191, 36, 0.3);
-        }
-        .card-glow-red {
-             box-shadow: 0 0 15px rgba(220, 50, 47, 0.5), 0 0 25px rgba(220, 50, 47, 0.4);
-        }
-        .card-glow-blue {
-             box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 25px rgba(59, 130, 246, 0.4);
-        }
-        
-        /* Animation states */
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Timeline specific animations */
-        .timeline-item .timeline-item-content, .timeline-item .timeline-dot {
-            opacity: 0;
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        
-        .timeline-item .timeline-item-content {
-             transform: translateX(var(--direction, 50px));
-        }
-        .timeline-item.is-visible .timeline-item-content {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .timeline-item .timeline-dot {
-            transform: scale(0);
-        }
-        .timeline-item.is-visible .timeline-dot {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Golden Thread Element */
-        #golden-thread {
-            position: fixed;
-            bottom: -100px; /* Start off-screen */
-            right: 2rem;
-            width: 12px;
-            height: 12px;
-            background-color: #FBBF24;
-            border-radius: 50%;
-            z-index: 1000;
-            box-shadow: 0 0 15px 5px rgba(251, 191, 36, 0.6);
-            transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out, background-color 0.5s ease-in-out, bottom 0.5s ease-out;
-        }
-        #golden-thread.is-active {
-            bottom: 2rem; /* Animate into view */
-        }
-        #golden-thread.nervous {
-            animation: nervous-pulse 0.5s infinite ease-in-out;
-        }
-        #golden-thread.learning {
-            background-color: #3B82F6;
-            box-shadow: 0 0 15px 5px rgba(59, 130, 246, 0.6);
-        }
-        #golden-thread.finale-prep {
-            animation: none;
-            transition: transform 1s cubic-bezier(0.5, 0, 0.75, 0), opacity 1s linear;
-            transform: translate(-50vw, -50vh) scale(3);
-            opacity: 0;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 15px 5px rgba(251, 191, 36, 0.6); }
-            50% { transform: scale(1.1); box-shadow: 0 0 25px 10px rgba(251, 191, 36, 0.7); }
-        }
-        @keyframes nervous-pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 15px 5px rgba(220, 50, 47, 0.6); background-color: #ef4444; }
-            50% { transform: scale(1.2); box-shadow: 0 0 20px 8px rgba(220, 50, 47, 0.8); background-color: #ef4444; }
-        }
-
-        /* Scroll down indicator animation */
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .animate-bounce-y {
-            animation: bounce 1.5s infinite;
-        }
-
-        /* Finale CSS Animation */
-        #finale {
-            background-color: #0c0c0c;
-        }
-        #finale-content {
-            opacity: 0;
-            transition: opacity 1s ease-in 1.5s; /* Fade in after shatter */
-        }
-        #finale.is-visible #finale-content {
-            opacity: 1;
-        }
-        #finale::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: #0c0c0c;
-            z-index: 10;
-            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-            transition: clip-path 1.5s cubic-bezier(0.7, 0, 0.3, 1);
-        }
-        #finale.is-visible::before {
-            clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
-        }
-
-        /* Golden Thread Status */
-        #golden-thread-status {
-            position: fixed;
-            bottom: 2rem;
-            right: 3.5rem; /* Position next to the golden thread */
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #e0e0e0;
-            padding: 0.5rem 1rem;
+        .problem-card {
+            background-color: #ffffff;
+            border-right: 5px solid #D9534F;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 1.5rem;
             border-radius: 0.5rem;
-            font-size: 0.875rem;
-            z-index: 999; /* Below golden thread but above content */
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
         }
-        #golden-thread-status.is-visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Timeline specific adjustments */
-        /* Central line and progress line - always centered */
-        #timeline-section .absolute.bg-amber-400\/20,
-        #timeline-section #timeline-progress {
-            left: 50%;
-            right: auto;
-            margin-left: -1.5px; /* Half width of the line to center it */
-        }
-
-        .timeline-item {
-            display: flex;
-            align-items: center; /* Vertically center content and dot */
-            width: 100%; /* Take full width of its parent (max-w-4xl) */
-            margin-bottom: 3rem; /* Space between items */
-            position: relative; /* For correct z-index and positioning */
-        }
-
-        /* Content box styling */
-        .timeline-item-content {
-            padding: 1rem;
-            background-color: rgba(15, 23, 42, 0.7);
-            border-radius: 0.75rem;
-            border: 1px solid rgba(251, 191, 36, 0.2);
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3), 0 0 25px rgba(251, 191, 36, 0.2);
-            transition: all 0.3s ease-in-out;
+        .problem-card svg { color: #D9534F; }
+        .solution-card {
+            background-color: #ffffff;
+            border-right: 5px solid #5CB85C;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            z-index: 2; /* Ensure content is above the line */
         }
-        .timeline-item-content:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 0 25px rgba(251, 191, 36, 0.5), 0 0 40px rgba(251, 191, 36, 0.3);
+        .solution-card .card-content {
+            flex-grow: 1;
         }
-
-        /* Positioning for left-aligned content (odd items) */
-        .timeline-item:nth-child(odd) {
-            justify-content: flex-start; /* Push content to the left */
+        .solution-card svg { color: #5CB85C; }
+        .problem-highlight { color: #D9534F; }
+        .chart-container {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .timeline-item:nth-child(odd) .timeline-item-content {
-            width: calc(50% - 7rem); /* 50% minus width of dot + gap */
-            margin-right: 1rem; /* Gap from the dot */
-            margin-left: auto; /* Push to left */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
         }
-
-        /* Positioning for right-aligned content (even items) */
-        .timeline-item:nth-child(even) {
-            justify-content: flex-end; /* Push content to the right */
+        .interactive-btn { transition: all 0.2s ease-in-out; }
+        .interactive-btn.active {
+            background-color: #003366 !important;
+            color: #ffffff !important;
+            transform: scale(1.05);
         }
-        .timeline-item:nth-child(even) .timeline-item-content {
-            width: calc(50% - 7rem); /* 50% minus width of dot + gap */
-            margin-left: 1rem; /* Gap from the dot */
-            margin-right: auto; /* Push to right */
+        /* Map Styles */
+        .map-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
         }
-
-        /* Timeline dot styling */
-        .timeline-item .timeline-dot {
-            width: 8rem; /* Width to accommodate text */
-            height: 2.5rem; /* Height */
-            border-radius: 0.5rem; /* Slightly rounded rectangle */
-            background-color: rgba(15, 23, 42, 0.9); /* Dark background for the dot */
-            color: #FBBF24; /* Text color */
-            font-size: 0.875rem; /* text-sm */
-            line-height: 1.2; /* Adjust line height for vertical centering */
-            flex-shrink: 0; /* Prevent dot from shrinking */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            text-align: center;
-            z-index: 3; /* Ensure dot is above line and content */
-            box-shadow: 0 0 8px rgba(251, 191, 36, 0.2); /* Subtle glow */
+        .district {
+            fill: #CED4DA;
+            stroke: #F8F9FA;
+            stroke-width: 2px;
+            transition: fill 0.3s ease;
+            cursor: pointer;
         }
-
-        /* Mobile adjustments */
-        @media (max-width: 767px) {
-            .timeline-item {
-                margin-bottom: 2rem; /* Slightly less margin on mobile */
-            }
-            .timeline-item:nth-child(odd) .timeline-item-content,
-            .timeline-item:nth-child(even) .timeline-item-content {
-                width: calc(50% - 5rem); /* Adjust width for mobile, smaller gap */
-                padding: 0.75rem; /* Smaller padding on mobile */
-            }
-            .timeline-item:nth-child(odd) .timeline-item-content {
-                margin-right: 0.5rem; /* Smaller margin for mobile */
-            }
-            .timeline-item:nth-child(even) .timeline-item-content {
-                margin-left: 0.5rem; /* Smaller margin for mobile */
-            }
-            .timeline-item .timeline-dot {
-                width: 6rem; /* Smaller width for mobile dot */
-                height: 2rem; /* Smaller height for mobile dot */
-                font-size: 0.75rem; /* Smaller font size for mobile */
-            }
+        .district:hover, .district.active {
+            fill: #5CB85C;
+        }
+        .map-tooltip {
+            position: absolute;
+            background-color: rgba(0, 51, 102, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -120%);
+            transition: opacity 0.2s;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        .map-info-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease-in-out;
         }
     </style>
 </head>
-<body class="bg-[#0c0c0c]">
+<body class="antialiased">
 
-    <div id="golden-thread"></div>
-    <div id="golden-thread-status" class="hidden md:block"></div> <!-- Hidden on small screens -->
-
-    <header id="hero" class="h-screen w-full flex flex-col items-center justify-center text-center text-white sticky top-0 z-10">
-        <div class="absolute inset-0 bg-black opacity-70"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
-        <h1 class="text-6xl md:text-9xl font-serif font-extrabold tracking-tighter text-shadow-gold z-10">יוֹמָא</h1>
-        <h2 class="text-2xl md:text-4xl mt-4 font-light text-gray-200 z-10">שבעה ימים בלשכת פרהדרין</h2>
-        <p class="mt-8 text-lg text-amber-400 z-10 flex items-center animate-bounce-y">
-            גְלֹל מַטָה כְּדֵי לְהִכָּנֵס
-            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-            </svg>
-        </p>
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl md:text-3xl font-bold text-[#003366]">תיקון שיטת הממשל בישראל</h1>
+                <div class="text-sm text-gray-600">סיכום אינטראקטיבי<br>מבוסס על מחקר המכון הישראלי לדמוקרטיה</div>
+            </div>
+        </div>
     </header>
 
-    <main id="content" class="relative z-20 bg-[#0c0c0c]">
-        <!-- Removed the empty div with height: 100vh; -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
-        <section data-thread-state="default" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section is-visible">
-            <h2 class="text-3xl md:text-5xl font-serif max-w-4xl text-center leading-relaxed">
-                "שִׁבְעַת יָמִים קֹדֶם יוֹם הַכִּפּוּרִים, מַפְרִישִׁין כֹּהֵן גָּדוֹל מִבֵּיתוֹ לְלִשְׁכַּת פַּרְהֶדְרִין."
-            </h2>
-            <p class="mt-8 text-xl text-gray-400 max-w-3xl text-center">
-                זו לא רק הפרדה פיזית. זהו מסע אל לב הקדושה. ההפרשה היא אקט של התקדשות, ניתוק מהעולם החיצון והתמקדות מוחלטת בעבודת היום הקדוש. אבל מדוע דווקא לשכה זו?
+        <!-- Hero Section -->
+        <section class="text-center mb-16 md:mb-24 scroll-animate">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">ממשל במלכוד</h2>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-700">
+                שיטת הממשל בישראל סובלת מכשלים מבניים הפוגעים ביציבות, במשילות ובלגיטימיות שלה. ניתוח זה מציג אבחון מבוסס-נתונים של הבעיות המרכזיות ומתווה חבילת רפורמות מדודות לריפוי המערכת.
             </p>
-            <div class="mt-12 grid md:grid-cols-2 gap-8 max-w-5xl">
-                <div class="p-6 bg-gray-900/50 rounded-xl border border-amber-400/20 card-glow">
-                    <h4 class="text-2xl font-serif text-amber-400 mb-2">לשכת בלווטין</h4>
-                    <p class="text-gray-300">בתחילה, בימי הכהנים הגדולים הכשרים כשמעון הצדיק, נקראה הלשכה על שם ה'בלווטין' - השרים והיועצים החשובים. שם המעיד על מעמדו הרם של הכהן.</p>
+        </section>
+
+        <!-- Section 1: The Core Problem -->
+        <section class="mb-16 md:mb-24">
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 section-title scroll-animate">הבעיה המרכזית: פיצול, חוסר יציבות ושחיקת אמון</h3>
+             <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div class="chart-container scroll-animate">
+                    <h4 class="text-xl font-bold mb-4 text-center">דעיכת המפלגות הגדולות</h4>
+                    <canvas id="largePartiesChart"></canvas>
+                    <p class="text-sm text-gray-500 mt-4 text-center">כוחן המשותף (במושבים) של שתי המפלגות הגדולות, 1949-2009.</p>
                 </div>
-                <div class="p-6 bg-gray-900/50 rounded-xl border border-amber-400/20 card-glow">
-                    <h4 class="text-2xl font-serif text-amber-400 mb-2">לשכת פרהדרין</h4>
-                    <p class="text-gray-300">לאחר מכן, בתקופה בה הכהונה הגדולה נקנתה בממון, הכהנים היו מתחלפים מדי שנה, בדומה ל'פרהדרין' - פקידי ממשל זוטרים. השם הפך לסמל של ירידת הדורות.</p>
+                <div class="chart-container scroll-animate">
+                    <h4 class="text-xl font-bold mb-4 text-center">ריבוי מפלגות בכנסת</h4>
+                    <canvas id="enppChart"></canvas>
+                    <p class="text-sm text-gray-500 mt-4 text-center">המספר האפקטיבי של מפלגות בכנסת.</p>
                 </div>
             </div>
         </section>
 
-        <section data-thread-state="nervous" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
-            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16 text-center">היערכות לאסון: תוכניות המגירה</h3>
-            <div class="grid md:grid-cols-2 gap-8 max-w-6xl">
-                <div class="p-8 rounded-2xl border border-white/10 bg-black/30 card-glow h-full flex flex-col">
-                    <h4 class="text-3xl font-bold font-serif text-amber-400 mb-4">כהן תחתיו</h4>
-                    <p class="text-lg italic text-gray-300 border-r-4 border-amber-400/50 pr-4 mb-4">"מַתְקִינִין לוֹ כֹּהֵן אַחֵר תַּחְתָּיו, שֶׁמָּא יֶאֱרַע בּוֹ פְּסוּל."</p>
-                    <p class="text-md text-gray-400 leading-relaxed flex-grow">החשש הקיומי: טומאה פתאומית שתפסול את הכהן. 'תוכנית הגיבוי' היא כהן נוסף, מוכן 'במצב הכן' בצל, שאף בגדיו נתפרו למידתו. הוא צל שמאיים ומבטיח בו זמנית.</p>
+        <!-- Section 2: The Electoral System -->
+        <section class="mb-16 md:mb-24">
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 section-title scroll-animate">אבחון א': שיטת הבחירות</h3>
+            <div class="chart-container scroll-animate">
+                <h4 class="text-xl font-bold mb-2 text-center">הדמיה: השפעת העלאת אחוז החסימה</h4>
+                <p class="text-center text-gray-600 mb-6">כך היו נראות תוצאות בחירות 2009 לו אחוז החסימה היה גבוה יותר.</p>
+                <div class="flex justify-center flex-wrap gap-2 mb-6" id="threshold-buttons">
+                    <button data-threshold="2" class="interactive-btn bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-full active">2% (היום)</button>
+                    <button data-threshold="2.5" class="interactive-btn bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-full">2.5%</button>
+                    <button data-threshold="3" class="interactive-btn bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-full">3%</button>
+                    <button data-threshold="4" class="interactive-btn bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-full">4%</button>
                 </div>
-                <div class="p-8 rounded-2xl border border-white/10 bg-black/30 card-glow-red h-full flex flex-col">
-                    <h4 class="text-3xl font-bold font-serif text-red-500 mb-4">אשה אחרת: המחלוקת</h4>
-                    <p class="text-lg italic text-gray-300 border-r-4 border-red-500/50 pr-4 mb-4">'רַבִּי יְהוּדָה אוֹמֵר: אַף אִשָּׁה אַחֶרֶת מַתְקִינִין לוֹ... אָמְרוּ לוֹ: אִם כֵּן, אֵין לַדָּבָר סוֹף!'</p>
-                    <p class="text-md text-gray-400 leading-relaxed flex-grow">הכפרה תלויה בפסוק "וְכִפֶּר בַּעֲדוֹ וּבְעַד בֵּיתוֹ" - וביתו זו אשתו. רבי יהודה דורש גיבוי גם למקרה שאשתו תמות. חכמים משיבים בטיעון לוגי צונן שחושף את הגבול הדק בין היערכות ראויה לפסימיות אבסורדית.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="timeline-section" data-thread-state="default" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 fade-in-section">
-            <h3 class="text-4xl md:text-6xl font-serif text-amber-400 text-shadow-gold mb-16 text-center">סדר היום בלשכה: שבעה ימי הכנה</h3>
-            <div class="w-full max-w-4xl relative">
-                <!-- The main vertical line and progress line -->
-                <div class="absolute top-0 bottom-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400/20 rounded-full"></div>
-                <div id="timeline-progress" class="absolute top-0 left-1/2 -ml-[1.5px] w-3 bg-amber-400 rounded-full" style="height: 0%;"></div>
-                
-                <!-- Timeline items with text days inside the content box -->
-                <div class="timeline-item mb-12">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
-                        <p class="font-bold text-lg text-amber-400">היום השביעי: ההפרשה והבידוד</p>
-                        <p class="text-gray-300">הכהן הגדול מועבר מביתו ללשכת פרהדרין. ניתוק מוחלט מהעולם החיצון כדי להתקדש.</p>
-                    </div>
-                    <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום השביעי</div>
-                    </div>
-                    <div class="w-5/12"></div>
-                </div>
-                <div class="timeline-item mb-12 flex-row-reverse">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
-                        <p class="font-bold text-lg text-amber-400">היום השישי: לימוד הלכות</p>
-                        <p class="text-gray-300">זקני הסנהדרין מלמדים אותו את סדר עבודת היום. כל פרט נסקר שוב ושוב.</p>
-                    </div>
-                    <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום השישי</div>
-                    </div>
-                    <div class="w-5/12"></div>
-                </div>
-                <div class="timeline-item mb-12">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
-                        <p class="font-bold text-lg text-amber-400">היום החמישי: הזאות מי חטאת</p>
-                        <p class="text-gray-300">מזים עליו כל שבעת הימים מאפר פרה אדומה, למקרה שנטמא בטומאת מת מבלי שידע.</p>
-                    </div>
-                    <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום החמישי</div>
-                    </div>
-                    <div class="w-5/12"></div>
-                </div>
-                   <div class="timeline-item mb-12 flex-row-reverse">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
-                        <p class="font-bold text-lg text-amber-400">היום הרביעי: תרגול מעשי</p>
-                        <p class="text-gray-300">הוא מתרגל את העבודות הקשות: חפינת הקטורת, הולכת הדם. השרירים זוכרים את מה שהנפש חרדה ממנו.</p>
-                    </div>
-                    <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום הרביעי</div>
-                    </div>
-                    <div class="w-5/12"></div>
-                </div>
-                   <div class="timeline-item mb-12">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
-                        <p class="font-bold text-lg text-amber-400">היום השלישי: לחץ פסיכולוגי</p>
-                        <p class="text-gray-300">האחריות על כפרת העם כולו מתחילה להכביד. המעמד דורש חוסן נפשי אדיר.</p>
-                    </div>
-                    <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום השלישי</div>
-                    </div>
-                    <div class="w-5/12"></div>
-                </div>
-                <div class="timeline-item mb-12 flex-row-reverse">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: 50px;">
-                        <p class="font-bold text-lg text-amber-400">היום השני: עימות תיאולוגי</p>
-                        <p class="text-gray-300">החשש מפני שינוי סדר הקטורת על ידי הצדוקים מגיע לשיאו. הלחץ הפוליטי מתווסף ללחץ הרוחני.</p>
-                    </div>
-                    <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום השני</div>
-                    </div>
-                    <div class="w-5/12"></div>
-                </div>
-                <div class="timeline-item mb-12">
-                    <div class="w-5/12 timeline-item-content p-4 bg-gray-900/70 rounded-lg border border-amber-400/30" style="--direction: -50px;">
-                        <p class="font-bold text-lg text-amber-400">היום הראשון: השבועה והבכי</p>
-                        <p class="text-gray-300">ערב יום כיפור. משביעים אותו שיעשה כמסורת הפרושים. הוא בוכה, והם בוכים. משקל הדורות על כתפיו.</p>
-                    </div>
-                    <div class="w-2/12 flex justify-center">
-                        <div class="timeline-dot w-28 h-10 rounded-md bg-gray-800 z-10 flex items-center justify-center font-bold text-amber-400 text-center text-sm">היום הראשון</div>
-                    </div>
-                    <div class="w-5/12"></div>
-                </div>
-            </div>
-        </section>
-        
-        <section data-thread-state="learning" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 bg-black/30 fade-in-section">
-            <h3 class="text-4xl md:text-6xl font-serif text-blue-400 text-shadow-lg mb-12 text-center">יסודות ההלכה: מניין לנו?</h3>
-            <div class="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-blue-400/50 card-glow-blue">
-                <p class="text-center text-lg text-gray-300 mb-8">ההיגיון התלמודי אינו לינארי. הוא רשת של הקשרים. ההפרשה של שבעה ימים נלמדת מהשוואה למקור קדום יותר - שבעת ימי המילואים של אהרן ובניו.</p>
-                <div class="text-center font-serif text-2xl md:text-3xl text-amber-300 p-4 bg-black/20 rounded-lg">
-                    "כַּאֲשֶׁר עָשָׂה בַּיּוֹם הַזֶּה, צִוָּה ה' לַעֲשֹׂת לְכַפֵּר עֲלֵיכֶם" (ויקרא ח, לד)
-                </div>
-                <div class="grid md:grid-cols-3 gap-6 mt-8 text-center">
-                    <div class="p-4">
-                        <h4 class="text-xl font-bold text-blue-300">"לַעֲשֹׂת"</h4>
-                        <p>נלמד בגזירה שווה מהמילה "צִוָּה" בפרשת פרה אדומה. מכאן, גם הכהן השורף את הפרה טעון פרישה של שבעה ימים.</p>
-                    </div>
-                    <div class="p-4 border-r border-l border-blue-400/30">
-                        <h4 class="text-xl font-bold text-blue-300">המקור: ימי המילואים</h4>
-                        <p>הציווי המקורי על הפרשה ניתן לאהרן ובניו לפני חנוכת המשכן. זהו אב-הטיפוס לכל פרישה עתידית.</p>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="text-xl font-bold text-blue-300">"לְכַפֵּר"</h4>
-                        <p>זהו הרמז לעבודת יום הכיפורים. הגמרא דנה מדוע לא נלמד מכאן גם לחגים אחרים, ומסבירה שיום כיפור דומה לימי המילואים בכך שהוא אירוע ייחודי של פעם בשנה.</p>
-                    </div>
+                <canvas id="thresholdChart"></canvas>
+                <div class="mt-6 text-center">
+                    <p class="text-lg">מספר מפלגות בכנסת: <span id="party-count" class="font-bold text-2xl problem-highlight">12</span></p>
+                    <p class="text-lg">שיעור קולות "מבוזבזים": <span id="wasted-votes" class="font-bold text-2xl problem-highlight">3.1%</span></p>
                 </div>
             </div>
         </section>
 
-        <section data-thread-state="nervous" class="min-h-screen w-full flex flex-col items-center justify-center p-8 md:p-16 bg-black/50 fade-in-section">
-            <h3 class="text-4xl md:text-6xl font-serif text-red-500 text-shadow-lg mb-12 text-center">העימות: פרושים נגד צדוקים</h3>
-             <div class="w-full max-w-5xl p-8 bg-gray-900/50 rounded-2xl border border-red-500/50 card-glow-red">
-                <h4 class="text-3xl font-bold text-center mb-4">נקודת הרתיחה: הקטורת</h4>
-                <p class="text-center text-lg text-gray-300 mb-8">הוויכוח לא היה טכני, הוא היה תהום תיאולוגית. היכן מתחיל הרגע הקדוש ביותר?</p>
-                <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div class="w-full md:w-1/2 text-center p-6 border-2 border-amber-400/50 rounded-lg bg-black/30">
-                        <h5 class="text-2xl font-bold text-amber-400 mb-2">דעת הפרושים (ההלכה)</h5>
-                        <p class="text-lg">"יַכְנִיס אֶת הַמַּחְתָּה וְאֶת הַכַּף, וְרַק אָז יַעֲלֶה עָשָׁן בִּפְנִים."</p>
-                        <p class="mt-2 text-gray-400">הקדושה נוצרת בתוך קודש הקדשים. הפעולה האנושית מתבצעת במקום הקדוש ביותר.</p>
-                    </div>
-                    <div class="w-full md:w-1/2 text-center p-6 border-2 border-red-500/50 rounded-lg bg-black/30">
-                        <h5 class="text-2xl font-bold text-red-500 mb-2">דעת הצדוקים</h5>
-                        <p class="text-lg">"יַקְטִיר מִבַּחוּץ וְיִכָּנֵס עִם הֶעָשָׁן."</p>
-                         <p class="mt-2 text-gray-400">האדם אינו יכול 'ליצור' קדושה בפנים. הוא מביא אותה מבחוץ. גישה שמרנית יותר, המרוחקת מהאל.</p>
-                    </div>
-                </div>
-                 <div class="mt-8 text-center">
-                     <h5 class="text-2xl font-bold text-yellow-200">הפתרון הדרמטי: השבועה</h5>
-                     <p class="text-lg mt-2 max-w-2xl mx-auto">"מַשְׁבִּיעִין אָנוּ עָלֶיךָ בְּמִי שֶׁשִּׁכֵּן שְׁמוֹ בַּבַּיִת הַזֶּה, שֶׁלֹּא תְּשַׁנֶּה דָּבָר מִכָּל מַה שֶּׁאָמַרְנוּ לָךְ."</p>
-                 </div>
+        <!-- Section 3: The Parties -->
+        <section class="mb-16 md:mb-24">
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 section-title scroll-animate">אבחון ב': המפלגות</h3>
+            <p class="mb-12 text-lg text-gray-600 scroll-animate">
+                מעבר לכללי המשחק, גם השחקנים עצמם - המפלגות - סובלים מכשלים מבניים. הן הופכות יותר ויותר ריכוזיות ואישיות, מאבדות את הבסיס הארגוני והאידיאולוגי שלהן, ומתנתקות מהציבור.
+            </p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="problem-card scroll-animate"><div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg><h4 class="text-xl font-bold">ריכוזיות ופרסונליזציה</h4></div></div>
+                <div class="problem-card scroll-animate"><div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg><h4 class="text-xl font-bold">שקיעת הדמוקרטיה הפנימית</h4></div></div>
+                <div class="problem-card scroll-animate"><div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg><h4 class="text-xl font-bold">התנוונות ארגונית</h4></div></div>
             </div>
         </section>
 
-        <section id="finale" class="relative h-screen w-full flex items-center justify-center overflow-hidden">
-            <div id="finale-content" class="relative z-20 text-center p-8">
-                <h3 class="text-3xl font-serif text-amber-400 mb-4">היציאה מהלשכה</h3>
-                <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-                    הכהן הגדול יוצא מהבידוד לא כפי שנכנס. הוא אינו רק טהור טכנית; הוא עבר כור היתוך. הוא התמודד עם לחץ, ספק, מחלוקת פוליטית והאחריות הכבדה ביותר.
-                </p>
-                <h2 class="text-4xl md:text-6xl font-serif text-amber-300 text-shadow-gold">הוּא מוּכָן.</h2>
+        <!-- Section 4: The Prescription (Text + Interactive) -->
+        <section class="mb-16 md:mb-24">
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 section-title scroll-animate">המרשם: חבילת רפורמות לריפוי המערכת</h3>
+            <p class="mb-8 text-lg text-gray-600 scroll-animate">
+                הפתרון אינו טמון בשינוי קוסמטי אחד, אלא בחבילה משולבת. כל רכיב תומך באחרים ונועד לטפל בהיבט אחר של הכשל, תוך יצירת איזון חדש בין יציבות לייצוגיות.
+            </p>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- Solution 1: Threshold -->
+                <div class="solution-card scroll-animate">
+                    <div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l-3-1m-3 1l-6 2m7-3l3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3m-3 0a5.002 5.002 0 00-4.472-4.998M15 12a5.002 5.002 0 00-4.472-4.998m0 0a5.002 5.002 0 00-4.472 4.998m5.444 0l-1.888.378M3.102 12h1.885m13.91 0h1.885M12 21a9.002 9.002 0 008.998-9" /></svg><h4 class="text-xl font-bold">רכיב 1: העלאת אחוז החסימה</h4></div>
+                    <div class="card-content"><h5 class="font-bold mb-2">המהלך:</h5><p class="text-gray-600 mb-4">העלאה מתונה של אחוז החסימה ל-3.25% (שווה ערך ל-4 מנדטים).</p><h5 class="font-bold mb-2">המטרה:</h5><p class="text-gray-600">צמצום הפיצול המפלגתי, עידוד מפלגות להתאחד לגושים גדולים ויציבים יותר, והקטנת כוח הסחיטה של מפלגות קטנות.</p></div>
+                </div>
+                <!-- Solution 2: Regional Component -->
+                <div class="solution-card scroll-animate">
+                    <div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><h4 class="text-xl font-bold">רכיב 2: בחירה אזורית-אישית</h4></div>
+                    <div class="card-content"><h5 class="font-bold mb-2">המהלך:</h5><p class="text-gray-600 mb-4">חלוקת המדינה ל-12-18 אזורי בחירה, שבהם ייבחרו כמחצית מחברי הכנסת. הבוחר יצביע גם למפלגה וגם למועמד המועדף עליו באזורו.</p><h5 class="font-bold mb-2">המטרה:</h5><p class="text-gray-600">חיזוק הקשר והאחריותיות (Accountability) בין הבוחר לנבחר, והבטחת ייצוג הולם לפריפריה הגאוגרפית והחברתית.</p></div>
+                </div>
+                <!-- Solution 3: Party Reform -->
+                <div class="solution-card scroll-animate">
+                    <div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" /></svg><h4 class="text-xl font-bold">רכיב 3: חיזוק המפלגות</h4></div>
+                    <div class="card-content"><h5 class="font-bold mb-2">המהלך:</h5><p class="text-gray-600 mb-4">חקיקה שתחייב את כל המפלגות לקיים הליכי בחירה דמוקרטיים פנימיים לקביעת המועמדים והיו"ר.</p><h5 class="font-bold mb-2">המטרה:</h5><p class="text-gray-600">בלימת "מפלגות האישיות", החזרת הכוח לחברי המפלגה, ושיקום המפלגות כמוסדות דמוקרטיים ויציבים.</p></div>
+                </div>
+            </div>
+            <div class="mt-12 bg-blue-50 border-r-4 border-blue-500 p-6 rounded-lg scroll-animate mb-16">
+                <h4 class="text-2xl font-bold text-[#003366] mb-2">העיקר הוא השילוב</h4>
+                <p class="text-lg text-gray-700">חיוני להבין שרכיבים אלו אינם "תפריט" לבחירה. הצלחת הרפורמה תלויה ביישום משולב של כל מרכיביה. למשל, העלאת אחוז החסימה לבדה עלולה לפגוע בייצוגיות, אך בשילוב עם בחירה אזורית, היא מבטיחה איזון נכון.</p>
+            </div>
+
+            <h4 class="text-3xl font-bold mb-8 section-title scroll-animate">הדגמה חזותית: רכיב הבחירה האזורית</h4>
+            <p class="mb-12 text-lg text-gray-600 scroll-animate">
+                הרכיב האזורי הוא מנוע מרכזי ברפורמה. הוא מחזק את הקשר בין הבוחר לנבחר ומבטיח ייצוג לפריפריה. לחצו על מחוז במפה (הדגמה) כדי לראות את ההיגיון בפעולה.
+            </p>
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div class="map-container scroll-animate">
+                    <div id="map-tooltip" class="map-tooltip"></div>
+                    <svg id="israel-map" viewBox="0 0 200 500" class="w-full h-auto">
+                        <g id="districts">
+                            <path id="galil-golan" class="district" data-name="מחוז הגליל והגולן" data-mandates="9" d="M95,5 L160,5 L160,60 L130,100 L90,60 Z"/>
+                            <path id="haifa" class="district" data-name="מחוז חיפה והעמקים" data-mandates="11" d="M90,60 L130,100 L110,140 L70,110 Z"/>
+                            <path id="sharon" class="district" data-name="מחוז השרון" data-mandates="10" d="M70,110 L110,140 L90,180 L50,150 Z"/>
+                            <path id="tel-aviv" class="district" data-name="מחוז תל אביב" data-mandates="12" d="M50,150 L90,180 L70,210 L30,180 Z"/>
+                            <path id="gush-dan" class="district" data-name="מחוז גוש דן" data-mandates="11" d="M30,180 L70,210 L55,230 L15,200 Z"/>
+                            <path id="shfela" class="district" data-name="מחוז השפלה" data-mandates="10" d="M15,200 L55,230 L75,260 L35,240 Z"/>
+                            <path id="jerusalem" class="district" data-name="מחוז ירושלים" data-mandates="10" d="M70,110 L110,140 L120,250 L75,260 L55,230 L70,210 L90,180 L110,140 L125,145 L130,255 L80,265 Z"/>
+                            <path id="yehuda-shomron" class="district" data-name="מחוז יהודה ושומרון" data-mandates="7" d="M110,140 L125,145 L130,255 L120,250 Z"/>
+                            <path id="negev-north" class="district" data-name="מחוז צפון הנגב" data-mandates="8" d="M35,240 L75,260 L80,350 L20,330 Z"/>
+                            <path id="negev-south" class="district" data-name="מחוז דרום הנגב" data-mandates="6" d="M20,330 L80,350 L60,450 L10,430 Z"/>
+                            <path id="arava-eilat" class="district" data-name="מחוז הערבה ואילת" data-mandates="3" d="M60,450 L70,495 L20,495 L10,430 Z"/>
+                        </g>
+                    </svg>
+                    <p class="text-xs text-gray-500 text-center mt-2">*חלוקת המחוזות והמנדטים הינה להדגמה בלבד.</p>
+                </div>
+                <div class="space-y-6">
+                    <div id="map-info-box" class="map-info-box scroll-animate">
+                        <h4 class="text-2xl font-bold text-[#003366] mb-2" id="info-title">בחר מחוז מהמפה</h4>
+                        <p class="text-gray-600" id="info-text">עבור עם העכבר או לחץ על אזור במפה כדי לראות כיצד הבחירה האזורית מחזקת את הקשר בין הבוחרים לנציגיהם.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
     </main>
+    
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4 text-center text-sm">
+            <p>תוצר זה נוצר בהשראת ועל בסיס הספר "תיקון שיטת הממשל בישראל" (2013), בעריכת גדעון רהט, שלומית ברנע, חן פרידברג ועופר קניג.</p>
+        </div>
+    </footer>
 
     <script>
-    // Self-executing function to avoid polluting the global scope
-    (function() {
-        // Wait for the DOM to be fully loaded before running any scripts
         document.addEventListener('DOMContentLoaded', () => {
-            try {
-                // --- Element Selectors ---
-                const goldenThread = document.getElementById('golden-thread');
-                const goldenThreadStatus = document.getElementById('golden-thread-status');
-                const hero = document.getElementById('hero');
-                const sections = document.querySelectorAll('section');
-                const timelineSection = document.getElementById('timeline-section');
-                const timelineProgressEl = document.getElementById('timeline-progress');
-                const timelineItems = document.querySelectorAll('.timeline-item');
-
-                // --- Safety Check: Ensure critical elements exist ---
-                if (!goldenThread || !hero || sections.length === 0 || !goldenThreadStatus ||
-                    (timelineSection && (!timelineProgressEl || timelineItems.length === 0))) {
-                    console.error("Critical elements are missing. Aborting script.");
-                    return;
-                }
-                
-                // --- Activate Golden Thread ---
-                setTimeout(() => {
-                    goldenThread.classList.add('is-active');
-                    goldenThread.style.animation = 'pulse 2s infinite ease-in-out';
-                    goldenThreadStatus.classList.add('is-visible');
-                    goldenThreadStatus.textContent = 'התקדמות'; // Initial status
-                }, 100);
-
-                // --- Intersection Observer for fade-in and thread state ---
-                const sectionObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('is-visible');
-                            const state = entry.target.getAttribute('data-thread-state');
-                            let statusText = '';
-                            if (state) {
-                                goldenThread.className = 'is-active'; // Reset classes
-                                goldenThread.classList.add(state);
-                                goldenThread.style.animation = state === 'nervous' ? 'nervous-pulse 0.5s infinite ease-in-out' : 'pulse 2s infinite ease-in-out';
-                                
-                                // Update status text based on state
-                                switch (state) {
-                                    case 'default':
-                                        statusText = 'התקדמות';
-                                        break;
-                                    case 'nervous':
-                                        statusText = 'חשש';
-                                        break;
-                                    case 'learning':
-                                        statusText = 'למידה';
-                                        break;
-                                    default:
-                                        statusText = 'התקדמות';
-                                }
-                                goldenThreadStatus.textContent = statusText;
-                            }
-                            // Special handling for finale
-                            if (entry.target.id === 'finale') {
-                                goldenThread.classList.add('finale-prep');
-                                goldenThreadStatus.textContent = 'סיום';
-                            }
-                        }
-                    });
-                }, { threshold: 0.2 }); // Lowered threshold for faster appearance
-
-                sections.forEach(section => sectionObserver.observe(section));
-
-                // --- Scroll-linked animations using requestAnimationFrame ---
-                let ticking = false;
-                const updateScrollAnimations = () => {
-                    // Hero Section parallax scroll effect
-                    const scrollY = window.scrollY;
-                    hero.style.opacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.7));
-
-                    // Timeline scroll-linked animation
-                    if (timelineSection && timelineProgressEl) {
-                        const rect = timelineSection.getBoundingClientRect();
-                        const start = rect.top;
-                        const end = rect.bottom - window.innerHeight;
-                        let progress = 0;
-
-                        if (start < 0 && end > 0) {
-                            progress = Math.abs(start) / (rect.height - window.innerHeight);
-                            progress = Math.max(0, Math.min(1, progress));
-                        } else if (start >= 0) {
-                            progress = 0;
-                        } else if (end <= 0) {
-                            progress = 1;
-                        }
-                        timelineProgressEl.style.height = `${progress * 100}%`;
-                    }
-                    ticking = false;
-                };
-
-                window.addEventListener('scroll', () => {
-                    if (!ticking) {
-                        window.requestAnimationFrame(updateScrollAnimations);
-                        ticking = true;
+            // GSAP Scroll-triggered animations
+            gsap.registerPlugin(ScrollTrigger);
+            const animatedElements = document.querySelectorAll('.scroll-animate');
+            animatedElements.forEach(el => {
+                gsap.fromTo(el, { opacity: 0, y: 30 }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 85%',
+                        toggleActions: 'play none none none',
                     }
                 });
+            });
 
-                // Initial call to set correct state on load
-                updateScrollAnimations();
+            // Charts
+            const electionYears = ['1965', '1969', '1973', '1977', '1981', '1984', '1988', '1992', '1996', '1999', '2003', '2006', '2009'];
+            const twoLargestPartiesSeats = [71, 82, 90, 80, 95, 85, 79, 76, 58, 45, 57, 48, 55];
+            const enppData = [4.73, 4.37, 4.71, 4.38, 3.86, 5.05, 4.89, 4.39, 6.17, 8.69, 6.77, 7.84, 6.00];
 
-                // --- Timeline item fade-in observer ---
-                if (timelineItems.length > 0) {
-                    const timelineItemObserver = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                entry.target.classList.add('is-visible');
-                            }
-                        });
-                    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }); // Lowered threshold for faster appearance
+            new Chart(document.getElementById('largePartiesChart').getContext('2d'), {
+                type: 'line',
+                data: { labels: electionYears, datasets: [{ data: twoLargestPartiesSeats, borderColor: '#003366', backgroundColor: 'rgba(0, 51, 102, 0.1)', borderWidth: 2, tension: 0.1, fill: true }] },
+                options: { responsive: true, scales: { y: { beginAtZero: false, title: { display: true, text: 'מספר מושבים' } } }, plugins: { legend: { display: false } } }
+            });
 
-                    timelineItems.forEach(item => timelineItemObserver.observe(item));
-                }
+            new Chart(document.getElementById('enppChart').getContext('2d'), {
+                type: 'bar',
+                data: { labels: electionYears, datasets: [{ data: enppData, backgroundColor: '#D9534F' }] },
+                options: { responsive: true, scales: { y: { beginAtZero: true, title: { display: true, text: 'מספר אפקטיבי' } } }, plugins: { legend: { display: false } } }
+            });
+            
+            // Threshold Simulation Chart
+            const thresholdData = {
+                '2': { parties: 12, wasted: 3.1, seats: [28, 27, 15, 13, 11, 5, 4, 4, 4, 3, 3, 3] },
+                '2.5': { parties: 11, wasted: 5.5, seats: [29, 27, 15, 13, 11, 5, 4, 4, 4, 3, 3] },
+                '3': { parties: 9, wasted: 11.4, seats: [31, 30, 16, 13, 11, 6, 5, 4, 4] },
+                '4': { parties: 6, wasted: 21.4, seats: [34, 33, 18, 15, 13, 7] }
+            };
+            const partyLabels = ['קדימה', 'הליכוד', 'ישראל ביתנו', 'העבודה', 'ש"ס', 'יהדות התורה', 'רע"מ-תע"ל', 'האיחוד הלאומי', 'חד"ש', 'הבית היהודי', 'מרצ', 'בל"ד'];
+            const partyColors = ['#2B6CB0', '#3182CE', '#4299E1', '#63B3ED', '#00A3A3', '#4FD1C5', '#38B2AC', '#319795', '#D53F8C', '#B83280', '#97266D', '#702459'];
+            let thresholdChart;
 
-            } catch (error) {
-                console.error("An error occurred during script execution:", error);
-                // Fallback to make content visible if script fails
-                document.body.style.opacity = 1;
+            function createThresholdChart(threshold) {
+                const data = thresholdData[threshold];
+                if (thresholdChart) thresholdChart.destroy();
+                thresholdChart = new Chart(document.getElementById('thresholdChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: partyLabels.slice(0, data.parties),
+                        datasets: [{ data: data.seats, backgroundColor: partyColors.slice(0, data.parties) }]
+                    },
+                    options: { indexAxis: 'y', responsive: true, scales: { x: { beginAtZero: true, title: { display: true, text: 'מספר מושבים' } } }, plugins: { legend: { display: false } } }
+                });
+                document.getElementById('party-count').textContent = data.parties;
+                document.getElementById('wasted-votes').textContent = `${data.wasted}%`;
             }
+            document.getElementById('threshold-buttons').addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    const threshold = e.target.dataset.threshold;
+                    document.querySelectorAll('#threshold-buttons button').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    createThresholdChart(threshold);
+                }
+            });
+            createThresholdChart('2');
+
+            // Interactive Map Logic
+            const districts = document.querySelectorAll('.district');
+            const tooltip = document.getElementById('map-tooltip');
+            const infoTitle = document.getElementById('info-title');
+            const infoText = document.getElementById('info-text');
+            const mapContainer = document.querySelector('.map-container');
+
+            const districtInfo = {
+                "galil-golan": { title: "מחוז הגליל והגולן", text: "חיזוק הקשר לנציגים באזור הצפון, תוך מתן מענה לסוגיות ייחודיות כמו חקלאות, תיירות וביטחון. הנציגים יהיו חייבים דין וחשבון ישירות לתושבי הגליל." },
+                "haifa": { title: "מחוז חיפה והעמקים", text: "ייצוג למטרופולין הצפוני, עם התמקדות בתעשייה, נמל חיפה, ואיכות סביבה. הבוחרים יוכלו לבחור נציגים המתמחים בבעיות האורבניות והאזוריות." },
+                "sharon": { title: "מחוז השרון", text: "נציגות ממוקדת לאחד האזורים המאוכלסים במדינה, עם דגש על תחבורה, פיתוח עירוני ושמירה על שטחים ירוקים." },
+                "tel-aviv": { title: "מחוז תל אביב", text: "נציגים שיתמחו בסוגיות הליבה של המרכז הכלכלי והתרבותי של ישראל: יוקר מחיה, דיור, תחבורה ציבורית ועסקים." },
+                "gush-dan": { title: "מחוז גוש דן", text: "מענה לצרכים של ערי הטבעת סביב תל אביב. הנציגים יטפלו בתשתיות ובשירותים המוניציפליים." },
+                "shfela": { title: "מחוז השפלה", text: "ייצוג לאזור המשלב ערים ותיקות וחדשות עם שטחים חקלאיים. הנציגים יעסקו באיזון בין פיתוח לשימור." },
+                "jerusalem": { title: "מחוז ירושלים", text: "נציגות שתתמקד באתגרים הייחודיים של בירת ישראל, כולל מורכבות דמוגרפית, פיתוח כלכלי ושמירה על המורשת." },
+                "yehuda-shomron": { title: "מחוז יהודה ושומרון", text: "מתן קול ישיר לתושבים, שיאפשר להם לבחור נציגים המכירים לעומק את הסוגיות המדיניות, הביטחוניות והאזרחיות באזור." },
+                "negev-north": { title: "מחוז צפון הנגב", text: "חיזוק הפריפריה הדרומית עם נציגים שיהיו מחויבים לפיתוח באר שבע והסביבה, תעסוקה, והתמודדות עם אתגרי הבדואים." },
+                "negev-south": { title: "מחוז דרום הנגב", text: "נציגות ממוקדת לעיירות הפיתוח והמועצות האזוריות, שתבטיח שהקול שלהן יישמע בכנסת בנושאי תעסוקה, חינוך ותשתיות." },
+                "arava-eilat": { title: "מחוז הערבה ואילת", text: "הבטחת ייצוג לאזור המרוחק גאוגרפית, עם התמקדות בתיירות, חקלאות מדברית וקשרים בינלאומיים דרך נמל אילת." }
+            };
+
+            districts.forEach(district => {
+                district.addEventListener('mousemove', (e) => {
+                    const rect = mapContainer.getBoundingClientRect();
+                    tooltip.textContent = `${district.dataset.name} (~${district.dataset.mandates} מנדטים)`;
+                    tooltip.style.opacity = '1';
+                    tooltip.style.left = `${e.clientX - rect.left}px`;
+                    tooltip.style.top = `${e.clientY - rect.top}px`;
+                });
+
+                district.addEventListener('mouseleave', () => {
+                    tooltip.style.opacity = '0';
+                });
+
+                district.addEventListener('click', () => {
+                    districts.forEach(d => d.classList.remove('active'));
+                    district.classList.add('active');
+                    const info = districtInfo[district.id];
+                    infoTitle.textContent = info.title;
+                    infoText.textContent = info.text;
+                });
+            });
         });
-    })();
     </script>
 </body>
 </html>
+
