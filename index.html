@@ -12,6 +12,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Assistant', sans-serif;
             background-color: #F8F9FA;
@@ -97,6 +100,7 @@
             border-radius: 0.5rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: all 0.3s ease-in-out;
+            min-height: 250px; /* Ensure a minimum height */
         }
     </style>
 </head>
@@ -195,6 +199,7 @@
                     <div class="card-content"><h5 class="font-bold mb-2">המהלך:</h5><p class="text-gray-600 mb-4">חקיקה שתחייב את כל המפלגות לקיים הליכי בחירה דמוקרטיים פנימיים לקביעת המועמדים והיו"ר.</p><h5 class="font-bold mb-2">המטרה:</h5><p class="text-gray-600">בלימת "מפלגות האישיות", החזרת הכוח לחברי המפלגה, ושיקום המפלגות כמוסדות דמוקרטיים ויציבים.</p></div>
                 </div>
             </div>
+            
             <div class="mt-12 bg-blue-50 border-r-4 border-blue-500 p-6 rounded-lg scroll-animate mb-16">
                 <h4 class="text-2xl font-bold text-[#003366] mb-2">העיקר הוא השילוב</h4>
                 <p class="text-lg text-gray-700">חיוני להבין שרכיבים אלו אינם "תפריט" לבחירה. הצלחת הרפורמה תלויה ביישום משולב של כל מרכיביה. למשל, העלאת אחוז החסימה לבדה עלולה לפגוע בייצוגיות, אך בשילוב עם בחירה אזורית, היא מבטיחה איזון נכון.</p>
@@ -208,7 +213,6 @@
                 <div class="map-container scroll-animate">
                     <div id="map-tooltip" class="map-tooltip"></div>
                     <svg id="israel-map" viewBox="0 0 180 500" class="w-full h-auto">
-                        <!-- NOTE: This is a more geographically faithful illustrative map. -->
                         <g id="districts">
                             <path id="galil-golan" class="district" data-name="מחוז הגליל והגולן" data-mandates="9" d="M100 0 L155 10 L145 70 L120 95 L80 60 L100 0Z"/>
                             <path id="haifa" class="district" data-name="מחוז חיפה והעמקים" data-mandates="11" d="M80 60 L120 95 L110 145 L60 120 L80 60Z"/>
@@ -227,6 +231,7 @@
                     <div id="map-info-box" class="map-info-box scroll-animate">
                         <h4 class="text-2xl font-bold text-[#003366] mb-2" id="info-title">בחר מחוז מהמפה</h4>
                         <p class="text-gray-600" id="info-text">עבור עם העכבר או לחץ על אזור במפה כדי לראות כיצד הבחירה האזורית מחזקת את הקשר בין הבוחרים לנציגיהם.</p>
+                        <div id="info-details" class="mt-4"></div>
                     </div>
                 </div>
             </div>
@@ -264,40 +269,18 @@
             const twoLargestPartiesSeats = [71, 82, 90, 80, 95, 85, 79, 76, 58, 45, 57, 48, 55];
             const enppData = [4.73, 4.37, 4.71, 4.38, 3.86, 5.05, 4.89, 4.39, 6.17, 8.69, 6.77, 7.84, 6.00];
 
-            new Chart(document.getElementById('largePartiesChart').getContext('2d'), {
-                type: 'line',
-                data: { labels: electionYears, datasets: [{ data: twoLargestPartiesSeats, borderColor: '#003366', backgroundColor: 'rgba(0, 51, 102, 0.1)', borderWidth: 2, tension: 0.1, fill: true }] },
-                options: { responsive: true, scales: { y: { beginAtZero: false, title: { display: true, text: 'מספר מושבים' } } }, plugins: { legend: { display: false } } }
-            });
-
-            new Chart(document.getElementById('enppChart').getContext('2d'), {
-                type: 'bar',
-                data: { labels: electionYears, datasets: [{ data: enppData, backgroundColor: '#D9534F' }] },
-                options: { responsive: true, scales: { y: { beginAtZero: true, title: { display: true, text: 'מספר אפקטיבי' } } }, plugins: { legend: { display: false } } }
-            });
+            new Chart(document.getElementById('largePartiesChart').getContext('2d'), { type: 'line', data: { labels: electionYears, datasets: [{ data: twoLargestPartiesSeats, borderColor: '#003366', backgroundColor: 'rgba(0, 51, 102, 0.1)', borderWidth: 2, tension: 0.1, fill: true }] }, options: { responsive: true, scales: { y: { beginAtZero: false, title: { display: true, text: 'מספר מושבים' } } }, plugins: { legend: { display: false } } } });
+            new Chart(document.getElementById('enppChart').getContext('2d'), { type: 'bar', data: { labels: electionYears, datasets: [{ data: enppData, backgroundColor: '#D9534F' }] }, options: { responsive: true, scales: { y: { beginAtZero: true, title: { display: true, text: 'מספר אפקטיבי' } } }, plugins: { legend: { display: false } } } });
             
             // Threshold Simulation Chart
-            const thresholdData = {
-                '2': { parties: 12, wasted: 3.1, seats: [28, 27, 15, 13, 11, 5, 4, 4, 4, 3, 3, 3] },
-                '2.5': { parties: 11, wasted: 5.5, seats: [29, 27, 15, 13, 11, 5, 4, 4, 4, 3, 3] },
-                '3': { parties: 9, wasted: 11.4, seats: [31, 30, 16, 13, 11, 6, 5, 4, 4] },
-                '4': { parties: 6, wasted: 21.4, seats: [34, 33, 18, 15, 13, 7] }
-            };
+            const thresholdData = { '2': { parties: 12, wasted: 3.1, seats: [28, 27, 15, 13, 11, 5, 4, 4, 4, 3, 3, 3] }, '2.5': { parties: 11, wasted: 5.5, seats: [29, 27, 15, 13, 11, 5, 4, 4, 4, 3, 3] }, '3': { parties: 9, wasted: 11.4, seats: [31, 30, 16, 13, 11, 6, 5, 4, 4] }, '4': { parties: 6, wasted: 21.4, seats: [34, 33, 18, 15, 13, 7] } };
             const partyLabels = ['קדימה', 'הליכוד', 'ישראל ביתנו', 'העבודה', 'ש"ס', 'יהדות התורה', 'רע"מ-תע"ל', 'האיחוד הלאומי', 'חד"ש', 'הבית היהודי', 'מרצ', 'בל"ד'];
             const partyColors = ['#2B6CB0', '#3182CE', '#4299E1', '#63B3ED', '#00A3A3', '#4FD1C5', '#38B2AC', '#319795', '#D53F8C', '#B83280', '#97266D', '#702459'];
             let thresholdChart;
-
             function createThresholdChart(threshold) {
                 const data = thresholdData[threshold];
                 if (thresholdChart) thresholdChart.destroy();
-                thresholdChart = new Chart(document.getElementById('thresholdChart').getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: partyLabels.slice(0, data.parties),
-                        datasets: [{ data: data.seats, backgroundColor: partyColors.slice(0, data.parties) }]
-                    },
-                    options: { indexAxis: 'y', responsive: true, scales: { x: { beginAtZero: true, title: { display: true, text: 'מספר מושבים' } } }, plugins: { legend: { display: false } } }
-                });
+                thresholdChart = new Chart(document.getElementById('thresholdChart').getContext('2d'), { type: 'bar', data: { labels: partyLabels.slice(0, data.parties), datasets: [{ data: data.seats, backgroundColor: partyColors.slice(0, data.parties) }] }, options: { indexAxis: 'y', responsive: true, scales: { x: { beginAtZero: true, title: { display: true, text: 'מספר מושבים' } } }, plugins: { legend: { display: false } } } });
                 document.getElementById('party-count').textContent = data.parties;
                 document.getElementById('wasted-votes').textContent = `${data.wasted}%`;
             }
@@ -314,20 +297,22 @@
             // Interactive Map Logic
             const districts = document.querySelectorAll('.district');
             const tooltip = document.getElementById('map-tooltip');
+            const infoBox = document.getElementById('map-info-box');
             const infoTitle = document.getElementById('info-title');
             const infoText = document.getElementById('info-text');
+            const infoDetails = document.getElementById('info-details');
             const mapContainer = document.querySelector('.map-container');
 
             const districtInfo = {
-                "galil-golan": { title: "מחוז הגליל והגולן", text: "חיזוק הקשר לנציגים באזור הצפון, תוך מתן מענה לסוגיות ייחודיות כמו חקלאות, תיירות וביטחון. הנציגים יהיו חייבים דין וחשבון ישירות לתושבי הגליל." },
-                "haifa": { title: "מחוז חיפה והעמקים", text: "ייצוג למטרופולין הצפוני, עם התמקדות בתעשייה, נמל חיפה, ואיכות סביבה. הבוחרים יוכלו לבחור נציגים המתמחים בבעיות האורבניות והאזוריות." },
-                "sharon": { title: "מחוז השרון", text: "נציגות ממוקדת לאחד האזורים המאוכלסים במדינה, עם דגש על תחבורה, פיתוח עירוני ושמירה על שטחים ירוקים." },
-                "gush-dan": { title: "מחוז גוש דן", text: "מענה לצרכים של ערי הטבעת סביב תל אביב. הנציגים יטפלו בתשתיות ובשירותים המוניציפליים." },
-                "shfela": { title: "מחוז השפלה", text: "ייצוג לאזור המשלב ערים ותיקות וחדשות עם שטחים חקלאיים. הנציגים יעסקו באיזון בין פיתוח לשימור." },
-                "jerusalem": { title: "מחוז ירושלים", text: "נציגות שתתמקד באתגרים הייחודיים של בירת ישראל, כולל מורכבות דמוגרפית, פיתוח כלכלי ושמירה על המורשת." },
-                "negev-north": { title: "מחוז צפון הנגב", text: "חיזוק הפריפריה הדרומית עם נציגים שיהיו מחויבים לפיתוח באר שבע והסביבה, תעסוקה, והתמודדות עם אתגרי הבדואים." },
-                "negev-south": { title: "מחוז דרום הנגב", text: "נציגות ממוקדת לעיירות הפיתוח והמועצות האזוריות, שתבטיח שהקול שלהן יישמע בכנסת בנושאי תעסוקה, חינוך ותשתיות." },
-                "arava-eilat": { title: "מחוז הערבה ואילת", text: "הבטחת ייצוג לאזור המרוחק גאוגרפית, עם התמקדות בתיירות, חקלאות מדברית וקשרים בינלאומיים דרך נמל אילת." }
+                "galil-golan": { title: "מחוז הגליל והגולן", text: "חיזוק הקשר לנציגים באזור הצפון, תוך מתן מענה לסוגיות ייחודיות כמו חקלאות, תיירות וביטחון.", cities: "צפת, טבריה, קרית שמונה, קצרין, כרמיאל" },
+                "haifa": { title: "מחוז חיפה והעמקים", text: "ייצוג למטרופולין הצפוני, עם התמקדות בתעשייה, נמל חיפה, ואיכות סביבה.", cities: "חיפה, הקריות, נשר, עפולה, יקנעם" },
+                "sharon": { title: "מחוז השרון", text: "נציגות ממוקדת לאחד האזורים המאוכלסים במדינה, עם דגש על תחבורה, פיתוח עירוני ושמירה על שטחים ירוקים.", cities: "נתניה, הרצליה, כפר סבא, רעננה, חדרה" },
+                "gush-dan": { title: "מחוז גוש דן", text: "נציגים שיתמחו בסוגיות הליבה של המרכז הכלכלי והתרבותי של ישראל: יוקר מחיה, דיור ותחבורה.", cities: "תל אביב-יפו, רמת גן, גבעתיים, בני ברק, חולון" },
+                "shfela": { title: "מחוז השפלה", text: "ייצוג לאזור המשלב ערים ותיקות וחדשות עם שטחים חקלאיים. הנציגים יעסקו באיזון בין פיתוח לשימור.", cities: "ראשון לציון, רחובות, אשדוד, לוד, רמלה" },
+                "jerusalem": { title: "מחוז ירושלים", text: "נציגות שתתמקד באתגרים הייחודיים של בירת ישראל, כולל מורכבות דמוגרפית, פיתוח כלכלי ושמירה על המורשת.", cities: "ירושלים, בית שמש, מעלה אדומים, מבשרת ציון" },
+                "negev-north": { title: "מחוז צפון הנגב", text: "חיזוק הפריפריה הדרומית עם נציגים שיהיו מחויבים לפיתוח באר שבע והסביבה, תעסוקה, והתמודדות עם אתגרים אזוריים.", cities: "באר שבע, אשקלון, קרית גת, שדרות, נתיבות" },
+                "negev-south": { title: "מחוז דרום הנגב", text: "נציגות ממוקדת לעיירות הפיתוח והמועצות האזוריות, שתבטיח שהקול שלהן יישמע בכנסת בנושאי תעסוקה, חינוך ותשתיות.", cities: "דימונה, ירוחם, ערד, מצפה רמון" },
+                "arava-eilat": { title: "מחוז הערבה ואילת", text: "הבטחת ייצוג לאזור המרוחק גאוגרפית, עם התמקדות בתיירות, חקלאות מדברית וקשרים בינלאומיים דרך נמל אילת.", cities: "אילת, יטבתה, פארן" }
             };
 
             districts.forEach(district => {
@@ -346,9 +331,16 @@
                 district.addEventListener('click', () => {
                     districts.forEach(d => d.classList.remove('active'));
                     district.classList.add('active');
+                    
                     const info = districtInfo[district.id];
                     infoTitle.textContent = info.title;
                     infoText.textContent = info.text;
+                    infoDetails.innerHTML = `<h5 class="font-bold mt-4 mb-2">ערים מרכזיות במחוז:</h5><p class="text-gray-500 text-sm">${info.cities}</p>`;
+
+                    // Scroll into view on smaller screens
+                    if (window.innerWidth < 1024) { // Tailwind's lg breakpoint
+                        infoBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
                 });
             });
         });
