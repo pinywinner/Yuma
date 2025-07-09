@@ -64,13 +64,13 @@
         .map-container {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             margin: auto;
         }
         .district {
             fill: #CED4DA;
             stroke: #F8F9FA;
-            stroke-width: 2px;
+            stroke-width: 1.5px;
             transition: fill 0.3s ease;
             cursor: pointer;
         }
@@ -207,19 +207,18 @@
             <div class="grid lg:grid-cols-2 gap-8 items-center">
                 <div class="map-container scroll-animate">
                     <div id="map-tooltip" class="map-tooltip"></div>
-                    <svg id="israel-map" viewBox="0 0 200 500" class="w-full h-auto">
+                    <svg id="israel-map" viewBox="0 0 180 500" class="w-full h-auto">
+                        <!-- NOTE: This is a more geographically faithful illustrative map. -->
                         <g id="districts">
-                            <path id="galil-golan" class="district" data-name="מחוז הגליל והגולן" data-mandates="9" d="M95,5 L160,5 L160,60 L130,100 L90,60 Z"/>
-                            <path id="haifa" class="district" data-name="מחוז חיפה והעמקים" data-mandates="11" d="M90,60 L130,100 L110,140 L70,110 Z"/>
-                            <path id="sharon" class="district" data-name="מחוז השרון" data-mandates="10" d="M70,110 L110,140 L90,180 L50,150 Z"/>
-                            <path id="tel-aviv" class="district" data-name="מחוז תל אביב" data-mandates="12" d="M50,150 L90,180 L70,210 L30,180 Z"/>
-                            <path id="gush-dan" class="district" data-name="מחוז גוש דן" data-mandates="11" d="M30,180 L70,210 L55,230 L15,200 Z"/>
-                            <path id="shfela" class="district" data-name="מחוז השפלה" data-mandates="10" d="M15,200 L55,230 L75,260 L35,240 Z"/>
-                            <path id="jerusalem" class="district" data-name="מחוז ירושלים" data-mandates="10" d="M70,110 L110,140 L120,250 L75,260 L55,230 L70,210 L90,180 L110,140 L125,145 L130,255 L80,265 Z"/>
-                            <path id="yehuda-shomron" class="district" data-name="מחוז יהודה ושומרון" data-mandates="7" d="M110,140 L125,145 L130,255 L120,250 Z"/>
-                            <path id="negev-north" class="district" data-name="מחוז צפון הנגב" data-mandates="8" d="M35,240 L75,260 L80,350 L20,330 Z"/>
-                            <path id="negev-south" class="district" data-name="מחוז דרום הנגב" data-mandates="6" d="M20,330 L80,350 L60,450 L10,430 Z"/>
-                            <path id="arava-eilat" class="district" data-name="מחוז הערבה ואילת" data-mandates="3" d="M60,450 L70,495 L20,495 L10,430 Z"/>
+                            <path id="galil-golan" class="district" data-name="מחוז הגליל והגולן" data-mandates="9" d="M100 0 L155 10 L145 70 L120 95 L80 60 L100 0Z"/>
+                            <path id="haifa" class="district" data-name="מחוז חיפה והעמקים" data-mandates="11" d="M80 60 L120 95 L110 145 L60 120 L80 60Z"/>
+                            <path id="sharon" class="district" data-name="מחוז השרון" data-mandates="10" d="M60 120 L110 145 L95 185 L50 160 L60 120Z"/>
+                            <path id="gush-dan" class="district" data-name="מחוז גוש דן" data-mandates="11" d="M50 160 L95 185 L85 220 L40 195 L50 160Z"/>
+                            <path id="shfela" class="district" data-name="מחוז השפלה" data-mandates="10" d="M40 195 L85 220 L75 260 L30 235 L40 195Z"/>
+                            <path id="jerusalem" class="district" data-name="מחוז ירושלים" data-mandates="10" d="M110 145 L120 250 L75 260 L85 220 L95 185 L110 145Z"/>
+                            <path id="negev-north" class="district" data-name="מחוז צפון הנגב" data-mandates="8" d="M30 235 L75 260 L100 350 L20 330 L30 235Z"/>
+                            <path id="negev-south" class="district" data-name="מחוז דרום הנגב" data-mandates="6" d="M20 330 L100 350 L70 450 L10 430 L20 330Z"/>
+                            <path id="arava-eilat" class="district" data-name="מחוז הערבה ואילת" data-mandates="3" d="M10 430 L70 450 L55 495 L25 495 L10 430Z"/>
                         </g>
                     </svg>
                     <p class="text-xs text-gray-500 text-center mt-2">*חלוקת המחוזות והמנדטים הינה להדגמה בלבד.</p>
@@ -323,11 +322,9 @@
                 "galil-golan": { title: "מחוז הגליל והגולן", text: "חיזוק הקשר לנציגים באזור הצפון, תוך מתן מענה לסוגיות ייחודיות כמו חקלאות, תיירות וביטחון. הנציגים יהיו חייבים דין וחשבון ישירות לתושבי הגליל." },
                 "haifa": { title: "מחוז חיפה והעמקים", text: "ייצוג למטרופולין הצפוני, עם התמקדות בתעשייה, נמל חיפה, ואיכות סביבה. הבוחרים יוכלו לבחור נציגים המתמחים בבעיות האורבניות והאזוריות." },
                 "sharon": { title: "מחוז השרון", text: "נציגות ממוקדת לאחד האזורים המאוכלסים במדינה, עם דגש על תחבורה, פיתוח עירוני ושמירה על שטחים ירוקים." },
-                "tel-aviv": { title: "מחוז תל אביב", text: "נציגים שיתמחו בסוגיות הליבה של המרכז הכלכלי והתרבותי של ישראל: יוקר מחיה, דיור, תחבורה ציבורית ועסקים." },
                 "gush-dan": { title: "מחוז גוש דן", text: "מענה לצרכים של ערי הטבעת סביב תל אביב. הנציגים יטפלו בתשתיות ובשירותים המוניציפליים." },
                 "shfela": { title: "מחוז השפלה", text: "ייצוג לאזור המשלב ערים ותיקות וחדשות עם שטחים חקלאיים. הנציגים יעסקו באיזון בין פיתוח לשימור." },
                 "jerusalem": { title: "מחוז ירושלים", text: "נציגות שתתמקד באתגרים הייחודיים של בירת ישראל, כולל מורכבות דמוגרפית, פיתוח כלכלי ושמירה על המורשת." },
-                "yehuda-shomron": { title: "מחוז יהודה ושומרון", text: "מתן קול ישיר לתושבים, שיאפשר להם לבחור נציגים המכירים לעומק את הסוגיות המדיניות, הביטחוניות והאזרחיות באזור." },
                 "negev-north": { title: "מחוז צפון הנגב", text: "חיזוק הפריפריה הדרומית עם נציגים שיהיו מחויבים לפיתוח באר שבע והסביבה, תעסוקה, והתמודדות עם אתגרי הבדואים." },
                 "negev-south": { title: "מחוז דרום הנגב", text: "נציגות ממוקדת לעיירות הפיתוח והמועצות האזוריות, שתבטיח שהקול שלהן יישמע בכנסת בנושאי תעסוקה, חינוך ותשתיות." },
                 "arava-eilat": { title: "מחוז הערבה ואילת", text: "הבטחת ייצוג לאזור המרוחק גאוגרפית, עם התמקדות בתיירות, חקלאות מדברית וקשרים בינלאומיים דרך נמל אילת." }
